@@ -1,11 +1,16 @@
 <?php
 include_once('../include/functions.php');
 $db= new functions();
-if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'login')
-{
+if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'login'){   
 	
-	$run = $db->query("select * from admin where username='".$db->real_sring($_REQUEST['username'])."' and admin_pass = '".$db->real_sring($_REQUEST['password'])."'");
+	$tableName = "admin";
+	if (filter_var($db->real_sring($_REQUEST['username']), FILTER_VALIDATE_EMAIL)) {
+		$condition = "admin_email='".$db->real_sring($_REQUEST['username'])."' and admin_pass = '".$db->real_sring($_REQUEST['password'])."'";
+	}else{
+		$condition = "username='".$db->real_sring($_REQUEST['username'])."' and admin_pass = '".$db->real_sring($_REQUEST['password'])."'";
+	}
 	
+	$run = $db->selectFunction($tableName,$condition);
 	if(mysqli_num_rows($run) > 0)
 	{
 		$row = mysqli_fetch_assoc($run);

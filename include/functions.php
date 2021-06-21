@@ -6,7 +6,7 @@ class Functions
    /*basic function*/
    function __construct()
 	{ 
-		$this->con=mysqli_connect(DbHost, DbUser, DbPass, DbName) or die('Could not connect: ' . mysqli_connect_error());
+		$this->con=mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME) or die('Could not connect: ' . mysqli_connect_error());
 	}
 	function query($q)
 	{
@@ -37,6 +37,14 @@ class Functions
 		{
 			$data = mysqli_fetch_assoc($run);
 		}
+		return $data;
+	}
+
+	function selectFunction($table,$condition)
+	{
+		
+		$sql = "select * from $table where $condition";
+		$data = $this->query($sql);
 		return $data;
 	}
 
