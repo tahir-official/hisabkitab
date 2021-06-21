@@ -1,15 +1,5 @@
 <?php
-error_reporting(E_ALL);
-session_start();
-date_default_timezone_set("Asia/Kolkata");
-define('DbHost', 'localhost');
-define('DbUser', 'root');
-define('DbPass', '');
-define('DbName', 'jainam');  
-define('MAIN_URL', 'http://localhost/jainism');  
-define('EMAIL', 'info@localhost.com');
-define('PROJECT', 'JAINAM');
-define('CURRENCY', '₹');
+include_once('config.php');
 class Functions
 {
 	
