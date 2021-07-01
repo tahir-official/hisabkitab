@@ -1,26 +1,22 @@
-<!-- partial:partials/_sidebar.html -->
+<!-- sidebar-->
         <nav class="sidebar sidebar-offcanvas" id="sidebar">
+                
           <ul class="nav">
-            <li class="nav-item nav-profile">
-              <a href="#" class="nav-link">
-                <div class="profile-image">
-                  <img class="img-xs rounded-circle" src="assets/images/faces/face8.jpg" alt="profile image">
-                  <div class="dot-indicator bg-success"></div>
-                </div>
-                <div class="text-wrapper">
-                  <p class="profile-name"><?=$adminData['name']?></p>
-                  
-                </div>
+            
+            <li class="nav-item nav-category" style="text-align: center;">Main Menu</li>
+            <li class="nav-item div-mobile">
+              <a class="nav-link" href="<?=MAIN_URL?>/profile.php">
+                <i class="menu-icon typcn typcn-document-text"></i>
+                <span class="menu-title">My Profile</span>
               </a>
             </li>
-            <li class="nav-item nav-category">Main Menu</li>
             <li class="nav-item">
-              <a class="nav-link" href="<?=MAIN_URL?>">
+              <a class="nav-link" href="<?=MAIN_URL?>/dashboard.php">
                 <i class="menu-icon typcn typcn-document-text"></i>
                 <span class="menu-title">Dashboard</span>
               </a>
             </li>
-            <!-- <li class="nav-item">
+             <li class="nav-item">
               <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
                 <i class="menu-icon typcn typcn-coffee"></i>
                 <span class="menu-title">Basic UI Elements</span>
@@ -89,6 +85,12 @@
                   </li>
                 </ul>
               </div>
-            </li> -->
+            </li> 
+            <li class="nav-item div-mobile">
+              <a class="nav-link" href="<?=MAIN_URL?>/logout.php">
+                <i class="menu-icon typcn typcn-user-outline"></i>
+                <span class="menu-title">Logout</span>
+              </a>
+            </li>
           </ul>
         </nav>

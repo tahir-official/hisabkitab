@@ -2,7 +2,6 @@
 include_once('include/functions.php');
 $db= new functions();
 if(!isset($_SESSION['is_store_logged_in'])){ $db->redirect('index.php'); }
-
 $adminData=$db->getAdminData($_SESSION['store_id']);
 
 ?>
@@ -27,19 +26,21 @@ $adminData=$db->getAdminData($_SESSION['store_id']);
 
    
     <link rel="stylesheet" href="<?=MAIN_URL?>/assets/css/demo_1/style.css">
+    <link rel="stylesheet" href="<?=MAIN_URL?>/assets/css/custom_style.css">
     <script src="<?=MAIN_URL?>/assets/js/jquery.min.js"></script>
   
-    <link rel="shortcut icon" href="<?=MAIN_URL?>/assets/images/favicon.ico" />
+    <link rel="shortcut icon" href="<?=MAIN_URL?>/assets/images/jainlogo.png" />
+    
   </head>
   <body>
     <div class="container-scroller">
      
       <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div class="text-center navbar-brand-wrapper d-flex align-items-top justify-content-center">
-          <a class="navbar-brand brand-logo" href="index.html">
-            <img src="<?=MAIN_URL?>/assets/images/logo.svg" alt="logo" /> </a>
-          <a class="navbar-brand brand-logo-mini" href="index.html">
-            <img src="<?=MAIN_URL?>/assets/images/logo-mini.svg" alt="logo" /> </a>
+          <a class="navbar-brand brand-logo" href="<?=MAIN_URL?>">
+            <img src="<?=MAIN_URL?>/assets/images/jainlogo.png" alt="<?=PROJECT;?>" style="width: 125px;" /> </a>
+          <a class="navbar-brand brand-logo-mini" href="<?=MAIN_URL?>">
+            <img src="<?=MAIN_URL?>/assets/images/jainlogo.png" alt="<?=PROJECT;?>" /> </a>
         </div>
         <div class="navbar-menu-wrapper d-flex align-items-center">
           
@@ -49,14 +50,14 @@ $adminData=$db->getAdminData($_SESSION['store_id']);
             
             <li class="nav-item dropdown d-none d-xl-inline-block user-dropdown">
               <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
-                <img class="img-xs rounded-circle" src="<?=MAIN_URL?>/assets/images/faces/face8.jpg" alt="Profile image"> </a>
+                <img class="img-xs rounded-circle" src="<?=MAIN_URL?>/assets/images/jainlogo.png" alt="<?=PROJECT;?>"> </a>
               <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
                 <div class="dropdown-header text-center">
-                  <img class="img-md rounded-circle" src="<?=MAIN_URL?>/assets/images/faces/face8.jpg" alt="Profile image">
+                  <img class="img-md rounded-circle" src="<?=MAIN_URL?>/assets/images/jainlogo.png" alt="<?=PROJECT;?>">
                   <p class="mb-1 mt-3 font-weight-semibold"><?=$adminData['name']?></p>
                   <p class="font-weight-light text-muted mb-0"><?=$adminData['email']?></p>
                 </div>
-                <a class="dropdown-item">My Profile <span class="badge badge-pill badge-danger">1</span><i class="dropdown-item-icon ti-dashboard"></i></a>
+                <a href="<?=MAIN_URL?>/profile.php" class="dropdown-item">My Profile <i class="dropdown-item-icon ti-dashboard"></i></a>
                 
                 <a href="<?=MAIN_URL?>/logout.php" class="dropdown-item">Sign Out<i class="dropdown-item-icon ti-power-off"></i></a>
               </div>
