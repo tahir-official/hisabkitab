@@ -8,7 +8,7 @@
                   <div class="dot-indicator bg-success"></div>
                 </div>
                 <div class="text-wrapper">
-                  <p class="profile-name"><?=$adminData['admin_name']?></p>
+                  <p class="profile-name"><?=$adminData['name']?></p>
                   
                 </div>
               </a>

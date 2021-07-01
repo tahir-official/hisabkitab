@@ -1,17 +1,20 @@
 <?php
 include_once('include/functions.php');
 $db= new functions();
-if(!isset($_SESSION['is_admin_logged_in'])){ $db->redirect('index.php'); }
+if(!isset($_SESSION['is_store_logged_in'])){ $db->redirect('index.php'); }
 
-$adminData=$db->getAdminData($_SESSION['admin_id']);
+$adminData=$db->getAdminData($_SESSION['store_id']);
 
 ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
     
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+     <meta charset="UTF-8">
+    <meta name="description" content="This is hisabkitab Portal for personal use">
+    <meta name="keywords" content="HTML, CSS, JavaScript,Hisab,Broker,Jainam,Mahaver,tahir">
+    <meta name="author" content="Tahir Mansuri">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?=PROJECT;?></title>
   
     <link rel="stylesheet" href="<?=MAIN_URL?>/assets/vendors/iconfonts/mdi/css/materialdesignicons.min.css">
@@ -50,8 +53,8 @@ $adminData=$db->getAdminData($_SESSION['admin_id']);
               <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
                 <div class="dropdown-header text-center">
                   <img class="img-md rounded-circle" src="<?=MAIN_URL?>/assets/images/faces/face8.jpg" alt="Profile image">
-                  <p class="mb-1 mt-3 font-weight-semibold"><?=$adminData['admin_name']?></p>
-                  <p class="font-weight-light text-muted mb-0"><?=$adminData['admin_email']?></p>
+                  <p class="mb-1 mt-3 font-weight-semibold"><?=$adminData['name']?></p>
+                  <p class="font-weight-light text-muted mb-0"><?=$adminData['email']?></p>
                 </div>
                 <a class="dropdown-item">My Profile <span class="badge badge-pill badge-danger">1</span><i class="dropdown-item-icon ti-dashboard"></i></a>
                 

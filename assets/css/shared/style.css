@@ -9757,8 +9757,8 @@ ul {
 .auth {
   min-height: 100vh; }
   .auth.auth-bg-1 {
-    background: url("../../images/auth/login_1.jpg");
-    background-size: cover; }
+    background-image: linear-gradient(to right, rgba(255, 48, 0, 0), rgb(0, 16, 255));
+   }
   .auth.register-bg-1 {
     background: url("../../images/auth/register.jpg") center center no-repeat;
     background-size: cover; }
@@ -9792,7 +9792,8 @@ ul {
       font-family: "roboto", sans-serif;
       font-size: 13px;
       padding: 12px 8px;
-      font-weight: 600; }
+      font-weight: 600;
+      background-image: linear-gradient(to right, rgba(255, 48, 0, 0), rgb(0, 16, 255)); }
     .auth.theme-one .auto-form-wrapper .g-login {
       border: 1px solid #dee2e6;
       padding: 13px;
@@ -9821,7 +9822,7 @@ ul {
       .auth.theme-one .auth-footer {
         justify-content: center; } }
   .auth.theme-one .footer-text {
-    color: rgba(255, 255, 255, 0.4); }
+    color: rgb(255, 255, 255); }
 
 /* Error */
 .error-page {

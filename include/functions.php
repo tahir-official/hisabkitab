@@ -31,7 +31,7 @@ class Functions
 	function getAdminData($id)
 	{
 		$data = false;
-		$sql = "select * from admin where admin_id = '".$id."'";
+		$sql = "select * from store where store_id = '".$id."'";
 		$run = $this->query($sql);
 		if(mysqli_num_rows($run) > 0)
 		{
@@ -46,6 +46,23 @@ class Functions
 		$sql = "select * from $table where $condition";
 		$data = $this->query($sql);
 		return $data;
+	}
+
+	function encrypt_decrypt($string, $action)
+	{
+		$encrypt_method = "AES-256-CBC";
+		$secret_key = 'AA74CDCC2BBRT935136HH7B63C27'; 
+		$secret_iv = '5fgf5HJ5g27'; 
+		$key = hash('sha256', $secret_key);
+		$iv = substr(hash('sha256', $secret_iv), 0, 16); 
+
+		if ($action == 'encrypt') {
+			$output = openssl_encrypt($string, $encrypt_method, $key, 0, $iv);
+			$output = base64_encode($output);
+		} else if ($action == 'decrypt') {
+			$output = openssl_decrypt(base64_decode($string), $encrypt_method, $key, 0, $iv);
+		}
+		return $output;
 	}
 
 

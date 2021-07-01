@@ -3,66 +3,62 @@ include_once('../include/functions.php');
 $db= new functions();
 if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'login'){   
 	
-	$tableName = "admin";
+	$tableName = "store";
+	$password=$db->encrypt_decrypt($db->real_sring($_REQUEST['password']),'encrypt');
 	if (filter_var($db->real_sring($_REQUEST['username']), FILTER_VALIDATE_EMAIL)) {
-		$condition = "admin_email='".$db->real_sring($_REQUEST['username'])."' and admin_pass = '".$db->real_sring($_REQUEST['password'])."'";
+		$condition = "email='".$db->real_sring($_REQUEST['username'])."' and password = '".$password."'";
 	}else{
-		$condition = "username='".$db->real_sring($_REQUEST['username'])."' and admin_pass = '".$db->real_sring($_REQUEST['password'])."'";
+		$condition = "username='".$db->real_sring($_REQUEST['username'])."' and password = '".$password."'";
 	}
-	
 	$run = $db->selectFunction($tableName,$condition);
 	if(mysqli_num_rows($run) > 0)
 	{
 		$row = mysqli_fetch_assoc($run);
-		$_SESSION['is_admin_logged_in'] = true;
-		$_SESSION['admin_id'] = $row['admin_id'];
-		$_SESSION['admin_email'] = $row['admin_email'];
+		$_SESSION['is_store_logged_in'] = true;
+		$_SESSION['store_id'] = $row['store_id'];
+		$_SESSION['email'] = $row['email'];
 
-		$db->query("update admin set admin_last_login = '".date('Y-m-d')."' where admin_id = '".$row['admin_id']."'");
+		$db->query("update store set last_login = '".date('Y-m-d H:i:s')."' where store_id = '".$row['store_id']."'");
 		
-		$_SESSION['message'] = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> Welcome '.$row['admin_name'].'.</div>';
+		$_SESSION['message'] = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> Welcome '.$row['name'].'.</div>';
 		$response['url']=MAIN_URL.'/dashboard.php';
 		$response['status']=1;
 	}
 	else
 	{
-		$response['message'] ='<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Username or Password in correct !!</div>';
-		
+		$response['message'] ='<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Username or Password in-correct !!</div>';
 		$response['status']=0;
 		
 	}
    	
- echo json_encode($response);
+    echo json_encode($response);
 }else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'forgetPassword')
 {
-	$run = $db->query("select * from admin where username='".$db->real_sring($_REQUEST['username'])."'");
+	if (filter_var($db->real_sring($_REQUEST['username']), FILTER_VALIDATE_EMAIL)) {
+		$condition = "email='".$db->real_sring($_REQUEST['username'])."'";
+	}else{
+		$condition = "username='".$db->real_sring($_REQUEST['username'])."'";
+	}
+	$tableName = "store";
+	$run = $db->selectFunction($tableName,$condition);
 	if(mysqli_num_rows($run) > 0)
 	{
 		$row = mysqli_fetch_assoc($run);
-		$newpassword = rand();
+		$password=$db->encrypt_decrypt($row['password'],'decrypt');
 
-
-		$db->query("update admin set admin_pass = '".$newpassword."' where admin_id = '".$row['admin_id']."'");
-
-		$subject = "New password Notification !!";
-					
+        $subject = "Password Notification !!";
 		$html = '<p style="margin:0;font-size:20px;padding-bottom:5px;color:#2875d7">Welcome to '.PROJECT.'!</p>';
-		
-		$html .= '<p style="margin:0;padding:20px 0px">Hi, '.$row['admin_name'].' !</p>';
-		$html .= '<p style="margin:0;padding:20px 0px">We have received your password reset request.</p>';
-		$html .= '<p style="margin:0;padding:20px 0px">Your new password is :<strong>' .$newpassword .'</strong></p>';
-		
-		
-		$db->send_mail($row['admin_email'],$subject,$html);
-
-		
-		$response['message'] = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong>Your password reset Successfully. Please check your new password in register email !!</div>';
+		$html .= '<p style="margin:0;padding:20px 0px">Hi, '.$row['name'].' !</p>';
+		$html .= '<p style="margin:0;padding:20px 0px">We have received your password recover request.</p>';
+		$html .= '<p style="margin:0;padding:20px 0px">This is your password :<strong>' .$password .'</strong></p>';
+		$db->send_mail($row['email'],$subject,$html);
+        $response['message'] = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong>Your password has been successfully recovered. Please check your password in register email !!</div>';
 		$response['status']=1;
 		
 	}
 	else
 	{
-		$response['message'] ='<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> username not exists !!</div>';
+		$response['message'] ='<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Username or Email not exists !!</div>';
 		$response['status']=0;
 		
 	}
