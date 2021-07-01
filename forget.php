@@ -80,49 +80,6 @@ if(isset($_SESSION['is_store_logged_in'])){ $db->redirect('dashboard.php'); }
   </body>
   <script type="text/javascript">
   let baseUrl = '<?=MAIN_URL;?>';
-  $("#alert").hide();
-  $('#ForgetForm').submit(function(e) {
-
-      e.preventDefault();
-      let formData = $('#ForgetForm').serialize();
-
-      $.ajax({
-          method: "POST",
-          url: baseUrl + "/model/profileModel.php?action=forgetPassword",
-          data: formData,
-          dataType: 'JSON',
-          beforeSend: function() {
-            $(".btnSubmit").html('<i class="fa fa-spinner"></i> Processing...');
-            $(".btnSubmit").prop('disabled', true);
-            $("#alert").hide();
-            
-          }
-        })
-
-        .fail(function(response) {
-          alert( "Try again later." );
-        })
-
-        .done(function(response) {
-          if(response.status == 0){
-            $("#alert").html(response.message);
-            $("#alert").show();
-          }else{
-            $("#alert").html(response.message);
-            $("#alert").show();
-            $('#ForgetForm')[0].reset();
-          }
-          
-        })
-        .always(function() {
-          $(".btnSubmit").html('Submit');
-          $(".btnSubmit").prop('disabled', false);
-        });
-      
-      
-
-      return false;
-  });
-    
   </script>
+  <script src="<?=MAIN_URL?>/assets/js/custom.js"></script> 
 </html>
