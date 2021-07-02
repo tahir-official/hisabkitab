@@ -118,3 +118,46 @@ function updateProfile(){
   });
   return false; 
 }
+
+function resetPasswordFrom(){
+  $('#updatePassword')[0].reset();
+  return false; 
+}
+
+/*update script*/
+function updatePassword(){
+  let formData = $('#updatePassword').serialize();
+  $.ajax({
+    method: "POST",
+    url: baseUrl + "/model/profileModel.php?action=changePassword",
+    data: formData,
+    dataType: 'JSON',
+    beforeSend: function() {
+      $("#updatePassBtn").html('<i class="fa fa-spinner"></i> Processing...');
+      $("#updatePassBtn").prop('disabled', true);
+      $("#alert").hide();
+      
+    }
+  }) 
+
+  .fail(function(response) {
+    alert( "Try again later." );
+  })
+
+  .done(function(response) {
+    $('#updatePassBtn').prop('disabled',false);
+    $('#updatePassBtn').html('Change');
+    $("#alert").html(response.message);
+    $("#alert").show();
+    if(response.status==1){
+      $('#updatePassword')[0].reset();
+    }
+    
+  })
+
+  .always(function() {
+    $("#updatePassBtn").html('Change');
+    $("#updatePassBtn").prop('disabled', false);
+  });
+  return false; 
+}

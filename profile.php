@@ -51,21 +51,21 @@
             <div class="card-body">
                <h4 class="card-title">Change Password </h4>
                <p class="card-description"> Change Password Detail </p>
-               <form class="forms-sample">
+               <form class="forms-sample" role="form" method="post" id="updatePassword" onsubmit="return updatePassword();">
                   <div class="form-group">
-                     <label for="exampleInputPassword1">Current Password</label>
-                     <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Current Password">
+                     <label for="cpassword">Current Password</label>
+                     <input type="password" class="form-control" id="cpassword" name="cpassword" placeholder="Current Password">
                   </div>
                   <div class="form-group">
-                     <label for="exampleInputPassword1">New Password</label>
-                     <input type="password" class="form-control" id="exampleInputPassword1" placeholder="New Password">
+                     <label for="npassword">New Password</label>
+                     <input type="password" class="form-control" id="npassword" name="npassword" placeholder="New Password">
                   </div>
                   <div class="form-group">
-                     <label for="exampleInputPassword1">Confirm Password</label>
-                     <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Confirm Password">
+                     <label for="ccpassword">Confirm Password</label>
+                     <input type="password" class="form-control" id="ccpassword" name="ccpassword" placeholder="Confirm Password">
                   </div>
-                  <button type="submit" class="btn btn-success mr-2">Change</button>
-                  <button class="btn btn-danger">Cancel</button>
+                  <button type="submit" class="btn btn-success mr-2" id="updatePassBtn">Change</button>
+                  <button class="btn btn-danger" id="cancelPassBtn" onclick="return resetPasswordFrom();">Cancel</button>
                </form>
             </div>
          </div>
