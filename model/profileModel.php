@@ -68,7 +68,7 @@ if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'login'){
 	 echo json_encode($response);
 }else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'updateStore')
 {
-	$name=$db->real_sring($_REQUEST['name']);
+	/*$name=$db->real_sring($_REQUEST['name']);
 	$phone=$db->real_sring($_REQUEST['phone']);
 	$store_id=$_SESSION['store_id'];
     $tableName='store';
@@ -78,7 +78,7 @@ if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'login'){
 	$db->insert_history($store_id,'update','This store update detail');
 	$response['message'] = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong>Your Profile Update successfully !!</div>';
 	$response['status']=1;
-	echo json_encode($response);
+	echo json_encode($response);*/
 
 }
 ?>
