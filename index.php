@@ -19,7 +19,7 @@
       <link rel="stylesheet" href="<?=MAIN_URL?>/assets/vendors/css/vendor.bundle.addons.css">
       <script src="<?=MAIN_URL?>/assets/js/jquery.min.js"></script>
       <link rel="stylesheet" href="<?=MAIN_URL?>/assets/css/shared/style.css">
-      <link rel="shortcut icon" href="<?=MAIN_URL?>/assets/images/favicon.ico" />
+      <link rel="shortcut icon" href="<?=MAIN_URL?>/assets/images/jainlogo.png" />
    </head>
    <body>
       <div class="container-scroller">

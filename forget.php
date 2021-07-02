@@ -26,7 +26,7 @@
       <!-- inject:css -->
       <link rel="stylesheet" href="<?=MAIN_URL?>/assets/css/shared/style.css">
       <!-- endinject -->
-      <link rel="shortcut icon" href="<?=MAIN_URL?>/assets/images/favicon.ico" />
+      <link rel="shortcut icon" href="<?=MAIN_URL?>/assets/images/jainlogo.png" />
    </head>
    <body>
       <div class="container-scroller">
