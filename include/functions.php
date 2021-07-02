@@ -40,12 +40,41 @@ class Functions
 		return $data;
 	}
 
-	function selectFunction($table,$condition)
+	function fetch_record($table,$conditions = false,$order_by=false,$order =false)
 	{
 		
-		$sql = "select * from $table where $condition";
+		$sql = "SELECT * FROM `" .$table ."`";
+	    if($conditions){
+	      $sql .= " WHERE " .$conditions;
+	    }
+	    if($order){
+          $sql .= " order by " .$order_by." ".$order;
+	    }
+	    $data = $this->query($sql);
+		return $data;
+	}
+	function update_record($table,$content,$conditions= false)
+	{
+		
+		$sql = "update $table set $content where $conditions";
 		$data = $this->query($sql);
 		return $data;
+	}
+
+	function insert_history($store_id,$action,$message){
+
+		$sql="insert into history ('store_id', 'action', 'message') VALUES ($store_id,$action,$message)";
+
+		$sql = "INSERT INTO `history`(`store_id`,`action`, `message`)
+		VALUES(
+			'" .$store_id."', 
+			'" .$action ."',
+			'" .$message ."'
+			
+		)";
+		$data = $this->query($sql);
+		return $data;
+
 	}
 
 	function encrypt_decrypt($string, $action)

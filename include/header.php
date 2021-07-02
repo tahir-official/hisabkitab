@@ -28,6 +28,7 @@ $adminData=$db->getAdminData($_SESSION['store_id']);
     <link rel="stylesheet" href="<?=MAIN_URL?>/assets/css/demo_1/style.css">
     <link rel="stylesheet" href="<?=MAIN_URL?>/assets/css/custom_style.css">
     <script src="<?=MAIN_URL?>/assets/js/jquery.min.js"></script>
+    <script src="<?=MAIN_URL?>/assets/js/custom.js"></script>
   
     <link rel="shortcut icon" href="<?=MAIN_URL?>/assets/images/jainlogo.png" />
     

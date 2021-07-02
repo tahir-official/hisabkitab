@@ -21,4 +21,7 @@
     
     
   </body>
+  <script type="text/javascript">
+  let baseUrl = '<?=MAIN_URL;?>';
+  </script>
 </html>

@@ -44,10 +44,10 @@ $('#loginFrom').submit(function(e) {
 
 $('#ForgetForm').submit(function(e) {
 
-  e.preventDefault();
-  let formData = $('#ForgetForm').serialize();
+    e.preventDefault();
+    let formData = $('#ForgetForm').serialize();
 
-  $.ajax({
+    $.ajax({
       method: "POST",
       url: baseUrl + "/model/profileModel.php?action=forgetPassword",
       data: formData,
@@ -84,3 +84,39 @@ $('#ForgetForm').submit(function(e) {
 
   return false;
 });
+
+
+function updateProfile(){
+  let formData = $('#updateProfile').serialize();
+	
+     $.ajax({
+      method: "POST",
+      url: baseUrl + "/model/profileModel.php?action=updateStore",
+      data: formData,
+      dataType: 'JSON',
+      beforeSend: function() {
+        $(".btnSubmit").html('<i class="fa fa-spinner"></i> Processing...');
+        $(".btnSubmit").prop('disabled', true);
+        $("#alert").hide();
+        
+      }
+    }) 
+
+    .fail(function(response) {
+      alert( "Try again later." );
+    })
+    .done(function(response) {
+      $('.btnSubmit').prop('disabled',false);
+      $('.btnSubmit').html('Update');
+      $("#alert").html(response.message);
+      $("#alert").show();
+      if(response.status == 1){
+        $('#updateProfile')[0].reset();
+      }
+      
+    })
+    .always(function() {
+      $(".btnSubmit").html('Submit');
+      $(".btnSubmit").prop('disabled', false);
+    });
+}
