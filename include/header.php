@@ -43,7 +43,7 @@
                   <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
                      <div class="dropdown-header text-center">
                         <img class="img-md rounded-circle" src="<?=MAIN_URL?>/assets/images/jainlogo.png" alt="<?=PROJECT;?>">
-                        <p class="mb-1 mt-3 font-weight-semibold"><?=$adminData['name']?></p>
+                        <p class="mb-1 mt-3 font-weight-semibold" id="adminName"><?=$adminData['name']?></p>
                         <p class="font-weight-light text-muted mb-0"><?=$adminData['email']?></p>
                      </div>
                      <a href="<?=MAIN_URL?>/profile.php" class="dropdown-item">My Profile <i class="dropdown-item-icon ti-dashboard"></i></a>

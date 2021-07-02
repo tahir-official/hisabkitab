@@ -56,14 +56,12 @@ class Functions
 	function update_record($table,$content,$conditions= false)
 	{
 		
-		$sql = "update $table set $content where $conditions";
+		$sql = "UPDATE $table SET $content WHERE $conditions";
 		$data = $this->query($sql);
 		return $data;
 	}
 
 	function insert_history($store_id,$action,$message){
-
-		$sql="insert into history ('store_id', 'action', 'message') VALUES ($store_id,$action,$message)";
 
 		$sql = "INSERT INTO `history`(`store_id`,`action`, `message`)
 		VALUES(

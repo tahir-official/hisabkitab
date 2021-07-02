@@ -3,7 +3,7 @@ $('.toggle-password').click(function(){
     let input = $(this).prev();
     input.attr('type', input.attr('type') === 'password' ? 'text' : 'password');
 });
-
+/*login script*/
 $("#alert").hide();
 $('#loginFrom').submit(function(e) {
     e.preventDefault();
@@ -41,7 +41,7 @@ $('#loginFrom').submit(function(e) {
     return false;
 });
 
-
+/*forget script*/
 $('#ForgetForm').submit(function(e) {
 
     e.preventDefault();
@@ -79,44 +79,42 @@ $('#ForgetForm').submit(function(e) {
       $(".btnSubmit").html('Submit');
       $(".btnSubmit").prop('disabled', false);
     });
-  
-  
-
+ 
   return false;
 });
 
-
+/*update script*/
 function updateProfile(){
   let formData = $('#updateProfile').serialize();
-	
-     $.ajax({
-      method: "POST",
-      url: baseUrl + "/model/profileModel.php?action=updateStore",
-      data: formData,
-      dataType: 'JSON',
-      beforeSend: function() {
-        $(".btnSubmit").html('<i class="fa fa-spinner"></i> Processing...');
-        $(".btnSubmit").prop('disabled', true);
-        $("#alert").hide();
-        
-      }
-    }) 
 
-    .fail(function(response) {
-      alert( "Try again later." );
-    })
-    .done(function(response) {
-      $('.btnSubmit').prop('disabled',false);
-      $('.btnSubmit').html('Update');
-      $("#alert").html(response.message);
-      $("#alert").show();
-      if(response.status == 1){
-        $('#updateProfile')[0].reset();
-      }
+  $.ajax({
+    method: "POST",
+    url: baseUrl + "/model/profileModel.php?action=updateStore",
+    data: formData,
+    dataType: 'JSON',
+    beforeSend: function() {
+      $(".btnSubmit").html('<i class="fa fa-spinner"></i> Processing...');
+      $(".btnSubmit").prop('disabled', true);
+      $("#alert").hide();
       
-    })
-    .always(function() {
+    }
+  }) 
+
+  .fail(function(response) {
+    alert( "Try again later." );
+  })
+
+  .done(function(response) {
+    $('.btnSubmit').prop('disabled',false);
+    $('.btnSubmit').html('Update');
+    $("#alert").html(response.message);
+    $("#alert").show();
+    $("#adminName").html(response.name);
+    
+  })
+	.always(function() {
       $(".btnSubmit").html('Submit');
       $(".btnSubmit").prop('disabled', false);
-    });
+  });
+  return false; 
 }
