@@ -3,7 +3,7 @@ $('.toggle-password').click(function(){
     let input = $(this).prev();
     input.attr('type', input.attr('type') === 'password' ? 'text' : 'password');
 });
-/*login script*/
+/*login script start*/
 $("#alert").hide();
 $('#loginFrom').submit(function(e) {
     e.preventDefault();
@@ -19,7 +19,7 @@ $('#loginFrom').submit(function(e) {
           $("#alert").hide();
           
         }
-      })
+    })
 
     .fail(function(response) {
         alert( "Try again later." );
@@ -37,11 +37,12 @@ $('#loginFrom').submit(function(e) {
     .always(function() {
         $(".btnLogin").html('Login');
         $(".btnLogin").prop('disabled', false);
-    });
+   });
     return false;
 });
+/*login script end*/
 
-/*forget script*/
+/*forget script start*/
 $('#ForgetForm').submit(function(e) {
 
     e.preventDefault();
@@ -82,8 +83,8 @@ $('#ForgetForm').submit(function(e) {
  
   return false;
 });
-
-/*update script*/
+/*forget script end*/
+/*update script start*/
 function updateProfile(){
   let formData = $('#updateProfile').serialize();
 
@@ -118,13 +119,14 @@ function updateProfile(){
   });
   return false; 
 }
+/*update script end*/
 
 function resetPasswordFrom(){
   $('#updatePassword')[0].reset();
   return false; 
 }
 
-/*update script*/
+/*update password script start*/
 function updatePassword(){
   let formData = $('#updatePassword').serialize();
   $.ajax({
@@ -161,3 +163,4 @@ function updatePassword(){
   });
   return false; 
 }
+/*update password script end*/

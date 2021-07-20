@@ -13,32 +13,14 @@ class Functions
 		$sqlquery = mysqli_query($this->con,$q);
 		return $sqlquery;
 	}
-	function insert_id()
-	{
-		$id = mysqli_insert_id($this->con);
-		return $id;
-	}
-	function real_sring($q)
-	{
-		$string = mysqli_real_escape_string($this->con, $q);
-		return $string;
-	}
+	
+	
 	function redirect($location)
 	{ 
 		echo '<script>window.location.href="'.$location.'"</script>';
 		die(); 
 	}
-	function getAdminData($id)
-	{
-		$data = false;
-		$sql = "select * from store where store_id = '".$id."'";
-		$run = $this->query($sql);
-		if(mysqli_num_rows($run) > 0)
-		{
-			$data = mysqli_fetch_assoc($run);
-		}
-		return $data;
-	}
+	
 
 	function fetch_record($table,$conditions = false,$order_by=false,$order =false)
 	{

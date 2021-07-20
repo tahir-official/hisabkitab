@@ -29,11 +29,12 @@
                   <div class="col-lg-4 mx-auto">
                      <div class="auto-form-wrapper">
                         <div id="alert"></div>
+                        <!--login form start-->
                         <form method="post" id="loginFrom">
                            <div class="form-group">
                               <label class="label">Username or Email</label>
                               <div class="input-group">
-                                 <input type="text" class="form-control" name="username" id="username" placeholder="Username or Email" required="" >
+                                 <input type="text" class="form-control" name="username" id="username" placeholder="Username or Email">
                                  <div class="input-group-append">
                                     <span class="input-group-text mdi mdi-check-circle-outline"></span>
                                  </div>
@@ -42,7 +43,7 @@
                            <div class="form-group">
                               <label class="label">Password</label>
                               <div class="input-group">
-                                 <input type="password" class="form-control" name="password" id="password" placeholder="*********" required="">
+                                 <input type="password" class="form-control" name="password" id="password" placeholder="*********">
                                  <div class="input-group-append toggle-password">
                                     <span class="input-group-text mdi mdi-eye-outline"></span>
                                  </div>
@@ -55,6 +56,7 @@
                               <a href="<?=MAIN_URL?>/forget.php" class="text-small forgot-password text-black">Forgot Password</a>
                            </div>
                         </form>
+                         <!--login form end-->
                      </div>
                      <p class="footer-text text-center">Copyright © <?=date('Y').' '.PROJECT;?> . All rights reserved.</p>
                      <p class="footer-text text-center text-center">Design & Developed by <a style="color: white;" href="<?=PROFILE_URL?>" target="_blank"> <?=DEVELOPER?></a> </p>
