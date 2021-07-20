@@ -4,6 +4,14 @@
       <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center"> Design & Developed by <a style="color: #1c45ef;" style="color: white;" href="<?=PROFILE_URL?>" target="_blank"> <?=DEVELOPER?></a></span>
    </div>
 </footer>
+<!-- Form Modal -->
+<div tabindex="-1" class="modal pmd-modal fade" id="form-dialog" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content" id="popupcontent">
+            
+        </div>
+    </div>
+</div>
 </div>
 </div>
 </div>

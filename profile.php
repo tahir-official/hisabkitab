@@ -1,19 +1,31 @@
 <?php
    include_once('include/header.php');
-   ?>
+?>
 <div class="container-fluid page-body-wrapper">
 <?php
    include_once('include/sidebar.php');
-   ?>
-<!-- partial -->
+?>
+
 <div class="main-panel">
 <div class="content-wrapper">
-   <!-- Page Title Header Starts-->
-   <?php
-      if (isset($_SESSION['message'])){ echo $_SESSION['message']; unset($_SESSION['message']); }
-      ?>
+   <div class="row page-title-header">
+      <div class="col-12">
+         <div class="page-header">
+            <h4 class="page-title">Profile Management</h4>
+            <div class="quick-link-wrapper w-100 d-md-flex flex-md-wrap">
+               <ul class="quick-links ml-auto">
+                  <li><a href="<?=MAIN_URL?>">Home</a></li>
+                  <li><a href="<?=$url?>">Profile Management</a></li>
+               </ul>
+            </div>
+         </div>
+      </div>
+   </div>
    <div id="alert">
    </div>
+   <?php
+      if (isset($_SESSION['message'])){ echo $_SESSION['message']; unset($_SESSION['message']); }
+   ?>
    <div class="row">
       <div class="col-md-6 d-flex align-items-stretch grid-margin">
          <div class="row flex-grow">

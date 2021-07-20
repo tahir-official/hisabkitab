@@ -15,7 +15,7 @@
          </a>
       </li>
       <li class="nav-item">
-         <a class="nav-link" href="<?=MAIN_URL?>/dashboard.php">
+         <a class="nav-link" href="<?=MAIN_URL?>/broker_management.php">
          <i class="menu-icon typcn typcn-document-text"></i>
          <span class="menu-title">Broker Management</span>
          </a>

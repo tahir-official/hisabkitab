@@ -164,3 +164,34 @@ function updatePassword(){
   return false; 
 }
 /*update password script end*/
+
+/*loadmodel script start*/
+function loadPopup(popupname){
+    
+    var popupname = popupname;
+    $.ajax({
+        method: "POST",
+        url: baseUrl + "/model/basicModel.php?action=loadPopup",
+        data: {popupname:popupname},
+        dataType: 'JSON',
+        beforeSend: function() {
+          $("#popupcontent").html('<div id="loader"></div>');
+          
+        }
+    })
+
+    .fail(function(response) {
+        alert( "Try again later." );
+    })
+
+    .done(function(response) {
+      $("#popupcontent").html(response.html);
+        
+    })
+    .always(function() {
+      $('#form-dialog').modal('toggle');
+    });
+    
+    return false;
+}
+/*loadmodel script end*/

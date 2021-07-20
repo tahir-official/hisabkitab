@@ -27,6 +27,13 @@
       <script src="<?=MAIN_URL?>/assets/js/jquery.min.js"></script>
       <script src="<?=MAIN_URL?>/assets/js/custom.js"></script>
       <link rel="shortcut icon" href="<?=MAIN_URL?>/assets/images/jainlogo.png" />
+      <style>
+         #loader{
+               height: 400px;
+               background: url('<?=MAIN_URL?>/assets/images/loader.gif') no-repeat center;
+               z-index: 999;
+         }
+      </style>
    </head>
    <body>
       <div class="container-scroller">
