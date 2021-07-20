@@ -15,6 +15,38 @@
          </a>
       </li>
       <li class="nav-item">
+         <a class="nav-link" href="<?=MAIN_URL?>/dashboard.php">
+         <i class="menu-icon typcn typcn-document-text"></i>
+         <span class="menu-title">Broker Management</span>
+         </a>
+      </li>
+      <li class="nav-item">
+         <a class="nav-link" href="<?=MAIN_URL?>/dashboard.php">
+         <i class="menu-icon typcn typcn-document-text"></i>
+         <span class="menu-title">Dealer Management</span>
+         </a>
+      </li>
+
+      <li class="nav-item">
+         <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+         <i class="menu-icon typcn typcn-coffee"></i>
+         <span class="menu-title">Bills Management</span>
+         <i class="menu-arrow"></i>
+         </a>
+         <div class="collapse" id="ui-basic">
+            <ul class="nav flex-column sub-menu">
+               <li class="nav-item">
+                  <a class="nav-link" href="pages/ui-features/buttons.html">Add Bill</a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link" href="pages/ui-features/dropdowns.html">All Bills</a>
+               </li>
+              
+            </ul>
+         </div>
+      </li>
+      
+      <!-- <li class="nav-item">
          <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
          <i class="menu-icon typcn typcn-coffee"></i>
          <span class="menu-title">Basic UI Elements</span>
@@ -83,7 +115,7 @@
                </li>
             </ul>
          </div>
-      </li>
+      </li> -->
       <li class="nav-item div-mobile">
          <a class="nav-link" href="<?=MAIN_URL?>/logout.php">
          <i class="menu-icon typcn typcn-user-outline"></i>

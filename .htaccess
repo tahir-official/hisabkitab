@@ -1,0 +1,2 @@
+ErrorDocument 404 http://localhost/hisabkitab/error-404.php
+ErrorDocument 500 http://localhost/hisabkitab/error-500.php
