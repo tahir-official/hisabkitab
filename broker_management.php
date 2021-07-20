@@ -26,7 +26,7 @@
       <div class="col-md-12">
          <div class="page-header-toolbar">
             <div class="sort-wrapper">
-               <button type="button"  onclick="return loadPopup('addBroker');" class="btn btn-primary toolbar-item">Add New</button>
+               <button type="button"  onclick="return loadPopup('addBroker',0);" class="btn btn-primary toolbar-item">Add New</button>
             </div>
          </div>
       </div>

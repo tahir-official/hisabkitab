@@ -166,13 +166,14 @@ function updatePassword(){
 /*update password script end*/
 
 /*loadmodel script start*/
-function loadPopup(popupname){
+function loadPopup(popupname,dataid){
     
     var popupname = popupname;
+    var dataid = dataid;
     $.ajax({
         method: "POST",
         url: baseUrl + "/model/basicModel.php?action=loadPopup",
-        data: {popupname:popupname},
+        data: {popupname:popupname,dataid:dataid},
         dataType: 'JSON',
         beforeSend: function() {
           $("#popupcontent").html('<div id="loader"></div>');
@@ -195,3 +196,31 @@ function loadPopup(popupname){
     return false;
 }
 /*loadmodel script end*/
+
+/*city script start*/
+function loadCity(state_id,set_id){
+  var state_id = state_id;
+    var set_id = set_id;
+    $.ajax({
+        method: "POST",
+        url: baseUrl + "/model/basicModel.php?action=getCites",
+        data: {state_id:state_id},
+        dataType: 'JSON',
+        beforeSend: function() {
+          $("#"+set_id).html('<option>Please wait</option>');
+          
+        }
+    })
+
+    .fail(function(response) {
+        alert( "Try again later." );
+    })
+
+    .done(function(response) {
+      $("#"+set_id).html(response.html);
+        
+     })
+    
+  return false;
+}
+/*city script start*/
