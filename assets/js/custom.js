@@ -167,9 +167,6 @@ function updatePassword(){
 
 /*loadmodel script start*/
 function loadPopup(popupname,dataid){
-    
-    var popupname = popupname;
-    var dataid = dataid;
     $.ajax({
         method: "POST",
         url: baseUrl + "/model/basicModel.php?action=loadPopup",
@@ -199,9 +196,7 @@ function loadPopup(popupname,dataid){
 
 /*city script start*/
 function loadCity(state_id,set_id){
-  var state_id = state_id;
-    var set_id = set_id;
-    $.ajax({
+  $.ajax({
         method: "POST",
         url: baseUrl + "/model/basicModel.php?action=getCites",
         data: {state_id:state_id},
