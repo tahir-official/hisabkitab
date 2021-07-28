@@ -3,34 +3,51 @@ include_once('../include/functions.php');
 $db= new functions();
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 /*login action start*/
-if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'loadPopup'){  
+if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'loadPopupUser'){  
 	//method check statement
 	if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stateTable = '"states"';
         $stateRun = $conn->query("call fetchRecord($stateTable,'','')");
         $stateRow = $stateRun->fetch_all(MYSQLI_ASSOC);
         $conn->next_result();
+
+        if($_POST['data_id']==0){
+            $modal_title='Add ';
+            $sabBtn='Submit';
+            $user_id='<input  name="user_id" value="0" class="form-control" type="hidden" >';
+            
+            
+        }else{
+            $modal_title='Edit ';
+            $sabBtn='Update';
+            $user_id='<input  name="user_id" value="'.$_POST['data_id'].'" class="form-control" type="hidden" >';
+        }
+
+        $city_id = "'city_id'";
         
+		
+        $usertype='';
+        if($_POST['user_type']==1){
+            $modal_title .='Broker';
+            $usertype='<input  name="user_type" value="1" class="form-control" type="hidden" >';
+        }else{
+            $modal_title .='Dealer';
+            $usertype='<input  name="user_type" value="2" class="form-control" type="hidden" >';
+        }
+        
+
         $option='';
         foreach($stateRow as $state){
            $option .='<option value="'.$state['id'].'">'.$state['name'].'</option>';
         }
-        if($_POST['dataid']!=0){
-            $city_id='city_id'.$_POST['dataid'];
-        }else{
-            $city_id='city_id';
-            
-        }
-        $city_id = "'".$city_id."'";
-        
-		//poup check statement
-		if($_POST['popupname'] == 'addBroker') {
-            $response['html'] ='<div class="modal-header pmd-modal-border">
-                                    <h3 class="modal-title">Add Broker</h3>
+        $response['html'] ='<div class="modal-header pmd-modal-border">
+                                    <h3 class="modal-title">'.$modal_title.'</h3>
                                     <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
                                 </div>
+                                <div id="popupalert"></div>
+                                <form id="userForm" method="post">
                                 <div class="modal-body">
-                                    <form id="addBroker" method="post">
+                                       '.$usertype.$user_id.'
                                         <div class="form-group pmd-textfield pmd-textfield-floating-label">
                                             <label for="fname">First Name</label>
                                             <input id="fname" name="fname" value="" class="form-control" type="text" >
@@ -48,30 +65,32 @@ if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'loadPopup'){
                                         <input type="tel" id="c_number" name="c_number" class="mat-input form-control"  value="">
                                         </div>
                                         <div class="form-group pmd-textfield pmd-textfield-floating-label">
+                                        <label for="address">Address</label>
+                                        <input type="text" id="address" name="address" class="mat-input form-control"  value="">
+                                        </div>
+                                        <div class="form-group pmd-textfield pmd-textfield-floating-label">
                                             <label for="state_id">State</label>
                                             <select id="state_id" name="state_id" class="form-control" onchange="return loadCity(this.value,'.$city_id.')">
-                                                <option>Select State</option>
+                                                <option value="">Select State</option>
                                                 '.$option.'
                                             </select>
                                         </div>
                                         <div class="form-group pmd-textfield pmd-textfield-floating-label">
                                             <label for="city_id">City</label>
                                             <select id="city_id" name="city_id" class="form-control">
-                                                <option>Select City</option>
+                                                <option value="">Select City</option>
                                                
                                             </select>
                                         </div>
-                                        
-                                    </form>
+                                     
                                 </div>
                                 <div class="modal-footer">
                                     <button data-dismiss="modal" class="btn pmd-ripple-effect btn-dark pmd-btn-flat" type="button">Cancel</button>
-                                    <button data-dismiss="modal" class="btn pmd-ripple-effect btn-primary pmd-btn-flat" type="submit">Submit</button>
-                                </div>';
+                                    <button  class="btn pmd-ripple-effect btn-primary pmd-btn-flat btnsbt" type="submit">'.$sabBtn.'</button>
+                                </div>
+                                </form>';
 			
-		}else if($_POST['popupname'] == 'addBrokera'){
-			$response['html'] =' <div class="modal-body"><div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Something Went Wrong !!</div></div>';
-		}
+		
 
 	}else{
 		//error message
@@ -97,7 +116,7 @@ else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'getCites')
 		{
 			$citiesRow = $run->fetch_all(MYSQLI_ASSOC);
         
-			$option='';
+			$option='<option>Select City</option>';
             foreach($citiesRow as $city){
             $option .='<option value="'.$city['id'].'">'.$city['city'].'</option>';
             }

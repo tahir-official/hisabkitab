@@ -26,7 +26,7 @@
       <div class="col-md-12">
          <div class="page-header-toolbar">
             <div class="sort-wrapper">
-               <button type="button"  onclick="return loadPopup('addBroker',0);" class="btn btn-primary toolbar-item">Add New</button>
+               <button type="button"  onclick="return loadPopupUser(1,0);" class="btn btn-primary toolbar-item">Add Broker</button>
             </div>
          </div>
       </div>
@@ -91,6 +91,7 @@
                   </td>
                   <td>
                      <label class="badge badge-warning">In progress</label>
+                     <button type="button"  onclick="return loadPopupUser(1,1);" class="btn btn-primary toolbar-item">Edit</button>
                   </td>
                </tr>
             </tbody>
@@ -99,10 +100,11 @@
    </div>
 </div>
 <!-- content-wrapper ends -->
-
 <?php
    include_once('include/footer.php');
 ?>
+
+
 
 
 

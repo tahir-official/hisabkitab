@@ -10,3 +10,8 @@
       display: block;
     }
   }
+  
+label.error {
+  color: #a94442;
+  
+}

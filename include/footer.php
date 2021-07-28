@@ -20,6 +20,7 @@
 <script src="<?=MAIN_URL?>/assets/js/shared/off-canvas.js"></script>
 <script src="<?=MAIN_URL?>/assets/js/shared/misc.js"></script>
 <script src="<?=MAIN_URL?>/assets/js/demo_1/dashboard.js"></script>
+<script src="<?=MAIN_URL?>/assets/js/jquery.validate.min.js"></script>
 </body>
 <script type="text/javascript">
    let baseUrl = '<?=MAIN_URL;?>';

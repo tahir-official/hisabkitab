@@ -166,11 +166,11 @@ function updatePassword(){
 /*update password script end*/
 
 /*loadmodel script start*/
-function loadPopup(popupname,dataid){
+function loadPopupUser(user_type,data_id){
     $.ajax({
         method: "POST",
-        url: baseUrl + "/model/basicModel.php?action=loadPopup",
-        data: {popupname:popupname,dataid:dataid},
+        url: baseUrl + "/model/basicModel.php?action=loadPopupUser",
+        data: {user_type:user_type,data_id:data_id},
         dataType: 'JSON',
         beforeSend: function() {
           $("#popupcontent").html('<div id="loader"></div>');
@@ -183,7 +183,9 @@ function loadPopup(popupname,dataid){
     })
 
     .done(function(response) {
+      $.getScript(baseUrl+"/assets/js/custom.js");
       $("#popupcontent").html(response.html);
+      
         
     })
     .always(function() {
@@ -196,7 +198,7 @@ function loadPopup(popupname,dataid){
 
 /*city script start*/
 function loadCity(state_id,set_id){
-  $.ajax({
+    $.ajax({
         method: "POST",
         url: baseUrl + "/model/basicModel.php?action=getCites",
         data: {state_id:state_id},
@@ -218,4 +220,65 @@ function loadCity(state_id,set_id){
     
   return false;
 }
+
+
 /*city script start*/
+
+$(document).ready(function () {
+
+  $('#userForm').validate({ 
+    
+     rules: {
+     fname: {
+       required : true
+       
+     },
+     lname: {
+       required : true
+     },
+     email_address: {
+        required: true,
+        email: true
+     },
+     c_number: {
+       required : true,
+      
+     },
+     
+     state_id: {
+       required : true,
+       
+     },
+     city_id: {
+       required : true,
+       
+     }
+   },
+      submitHandler: function (form) { 
+        let formData = $('#userForm').serialize();
+        $.ajax({
+          method: "POST",
+          url: baseUrl + "/model/userModel.php?action=userData",
+          data: formData,
+          dataType: 'JSON',
+          beforeSend: function() {
+            $(".btnsbt").html('<i class="fa fa-spinner"></i> Processing...');
+            $(".btnsbt").prop('disabled', true);
+            $("#popupalert").hide();
+            
+          }
+      })
+  
+      .fail(function(response) {
+          alert( "Try again later." );
+      })
+  
+      .done(function(response) {
+        
+          
+       })
+          return false; 
+      }
+  });
+  
+  });
