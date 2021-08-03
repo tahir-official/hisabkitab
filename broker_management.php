@@ -37,65 +37,20 @@
       if (isset($_SESSION['message'])){ echo $_SESSION['message']; unset($_SESSION['message']); }
    ?>
    <div class="row">
-      <div class="col-12 ">
-         <table class="table table-hover  table-bordered table-responsive-md">
-            <thead>
-               <tr>
-                  <th>User</th>
-                  <th>Product</th>
-                  <th>Sale</th>
-                  <th>Status</th>
-               </tr>
-            </thead>
-            <tbody>
-               <tr>
-                  <td>Jacob</td>
-                  <td>Photoshop</td>
-                  <td class="text-danger"> 28.76% <i class="mdi mdi-arrow-down"></i>
-                  </td>
-                  <td>
-                     <label class="badge badge-danger">Pending</label>
-                  </td>
-               </tr>
-               <tr>
-                  <td>Messsy</td>
-                  <td>Flash</td>
-                  <td class="text-danger"> 21.06% <i class="mdi mdi-arrow-down"></i>
-                  </td>
-                  <td>
-                     <label class="badge badge-warning">In progress</label>
-                  </td>
-               </tr>
-               <tr>
-                  <td>John</td>
-                  <td>Premier</td>
-                  <td class="text-danger"> 35.00% <i class="mdi mdi-arrow-down"></i>
-                  </td>
-                  <td>
-                     <label class="badge badge-info">Fixed</label>
-                  </td>
-               </tr>
-               <tr>
-                  <td>Peter</td>
-                  <td>After effects</td>
-                  <td class="text-success"> 82.00% <i class="mdi mdi-arrow-up"></i>
-                  </td>
-                  <td>
-                     <label class="badge badge-success">Completed</label>
-                  </td>
-               </tr>
-               <tr>
-                  <td>Dave</td>
-                  <td>53275535</td>
-                  <td class="text-success"> 98.05% <i class="mdi mdi-arrow-up"></i>
-                  </td>
-                  <td>
-                     <label class="badge badge-warning">In progress</label>
-                     <button type="button"  onclick="return loadPopupUser(1,1);" class="btn btn-primary toolbar-item">Edit</button>
-                  </td>
-               </tr>
-            </tbody>
-         </table>
+      <div class="col-12 table-responsive">
+      <table id="mytable" class="row-border " >
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Age</th>
+                <th>Start date</th>
+               
+            </tr>
+        </thead>
+        
+    </table>
       </div>
    </div>
 </div>
@@ -103,6 +58,44 @@
 <?php
    include_once('include/footer.php');
 ?>
+<script type="text/javascript" language="javascript">
+
+$(document).ready(function(){
+	
+	tableLoad();
+
+});	
+
+function tableLoad(){
+
+   var dataTable = $('#mytable').DataTable({
+		"processing" : true,
+		"serverSide" : true,
+		"order" : [],
+		"ajax" : {
+			url:"<?=MAIN_URL?>//model/userModel.php?action=getTableData",
+			type:"POST"
+		}
+	});
+	
+	// $('#column_name').selectpicker();
+
+	// $('#column_name').change(function(){
+
+	// 	var all_column = ["0", "1", "2", "3", "4"];
+
+	// 	var remove_column = $('#column_name').val();
+
+	// 	var remaining_column = all_column.filter(function(obj) { return remove_column.indexOf(obj) == -1; });
+
+	// 	dataTable.columns(remove_column).visible(false);
+
+	// 	dataTable.columns(remaining_column).visible(true);
+
+	// });
+
+}
+</script>
 
 
 
