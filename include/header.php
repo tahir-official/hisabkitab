@@ -1,7 +1,7 @@
 <?php
    include_once('include/functions.php');
-   $db= new functions();
-   if(!isset($_SESSION['is_store_logged_in'])){ $db->redirect('index.php'); }
+   $commonFunction= new functions();
+   if(!isset($_SESSION['is_store_logged_in'])){ $commonFunction->redirect('index.php'); }
    $store_id=$_SESSION['store_id'];
    $adminSqli = $conn->query("call getAdminData($store_id)");
    $conn->next_result();

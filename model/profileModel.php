@@ -1,7 +1,6 @@
 <?php
 include_once('../include/functions.php');
-
-$db= new functions();
+$commonFunction= new functions();
 /*login action start*/
 if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'login'){  
 	//method check statement
@@ -14,7 +13,7 @@ if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'login'){
 		}else{
 			$tableName = '"store"';
 			//password encryt statement
-			$password = $db->encrypt_decrypt($conn->real_escape_string($_POST['password']),'encrypt');
+			$password = $commonFunction->encrypt_decrypt($conn->real_escape_string($_POST['password']),'encrypt');
 			//email validation check statement
 			if (filter_var($conn->real_escape_string($_POST['username']), FILTER_VALIDATE_EMAIL)) {
 				$conditions = "email='".$conn->real_escape_string($_POST['username'])."' and password='".$password."'";
@@ -84,7 +83,7 @@ else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'forgetPassword')
 		if($run->num_rows > 0)
 		{
 			$row = $run->fetch_assoc();
-			$password=$db->encrypt_decrypt($row['password'],'decrypt');
+			$password=$commonFunction->encrypt_decrypt($row['password'],'decrypt');
 			$store_id=$row['store_id'];
 			
 			//send mail
@@ -93,7 +92,7 @@ else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'forgetPassword')
 			$html .= '<p style="margin:0;padding:20px 0px">Hi, '.$row['name'].' !</p>';
 			$html .= '<p style="margin:0;padding:20px 0px">We have received your password recover request.</p>';
 			$html .= '<p style="margin:0;padding:20px 0px">This is your password :<strong>' .$password .'</strong></p>';
-			$db->send_mail($row['email'],$subject,$html);
+			$commonFunction->send_mail($row['email'],$subject,$html);
 			//insert history record statement with Procedures
 			$conn->query("CALL insertHistory($store_id,'Password recover','This store recovered password !!')");
 			//success message
@@ -177,10 +176,10 @@ else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'changePassword')
 		    $run = $conn->query("call fetchRecord($tableName,$conditions,'')");
 			$conn->next_result();
 			$row = $run->fetch_assoc();
-			$password=$db->encrypt_decrypt($row['password'],'decrypt');
+			$password=$commonFunction->encrypt_decrypt($row['password'],'decrypt');
 			if($password==$cpassword){
 				
-				$newpassword=$db->encrypt_decrypt($npassword,'encrypt');
+				$newpassword=$commonFunction->encrypt_decrypt($npassword,'encrypt');
 				//update record statement with Procedures
 				$contents_update= "password = '".$newpassword."'";
 				$contents_update='"'.$contents_update.'"';

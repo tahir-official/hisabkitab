@@ -49,7 +49,7 @@
                         </div>
                         <div class="form-group">
                            <label for="phone">Phone</label>
-                           <input type="text" class="form-control" name="phone" id="phone" placeholder="Enter phone" value="<?=$adminData['phone']?>">
+                           <input type="tel" class="form-control" name="phone" id="phone" pattern="[0-9]{3}[0-9]{3}[0-9]{4}" placeholder="Enter phone" value="<?=$adminData['phone']?>">
                         </div>
                         <button type="submit" name="submit" id="updateProfileBtn" class="btn btn-success mr-2 btnSubmit">Update</button>
                      </form>

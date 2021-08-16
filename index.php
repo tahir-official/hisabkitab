@@ -1,8 +1,8 @@
 <?php
    include_once('include/functions.php');
-   $db= new functions();
-   if(isset($_SESSION['is_store_logged_in'])){ $db->redirect('dashboard.php'); }
-   ?>
+   $commonFunction= new functions();
+   if(isset($_SESSION['is_store_logged_in'])){ $commonFunction->redirect('dashboard.php'); }
+?>
 <!DOCTYPE html>
 <html lang="en">
    <head>
