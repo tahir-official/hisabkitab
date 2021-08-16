@@ -75,6 +75,15 @@ class Functions
 	}
 
 
+	function count_all_data($table)
+    {
+            $query = "SELECT * FROM $table";
+
+            $statement = $this->con->query($query);
+            return $statement->num_rows;
+    }
+
+
    /*basic function*/
    
 

@@ -169,7 +169,7 @@ function updatePassword(){
 function loadPopupUser(user_type,data_id){
     $.ajax({
         method: "POST",
-        url: baseUrl + "/model/basicModel.php?action=loadPopupUser",
+        url: baseUrl + "/model/userModel.php?action=loadPopupUser",
         data: {user_type:user_type,data_id:data_id},
         dataType: 'JSON',
         beforeSend: function() {
@@ -223,6 +223,36 @@ function loadCity(state_id,set_id){
 
 
 /*city script start*/
+
+function tableLoad(loadurl){
+
+  var dataTable = $('#mytable').DataTable({
+   "processing" : true,
+   "serverSide" : true,
+   "order" : [],
+   "ajax" : {
+     url:loadurl,
+     type:"POST"
+   }
+ });
+ 
+ // $('#column_name').selectpicker();
+
+ // $('#column_name').change(function(){
+
+ // 	var all_column = ["0", "1", "2", "3", "4"];
+
+ // 	var remove_column = $('#column_name').val();
+
+ // 	var remaining_column = all_column.filter(function(obj) { return remove_column.indexOf(obj) == -1; });
+
+ // 	dataTable.columns(remove_column).visible(false);
+
+ // 	dataTable.columns(remaining_column).visible(true);
+
+ // });
+
+}
 
 $(document).ready(function () {
 
