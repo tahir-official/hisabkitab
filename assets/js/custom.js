@@ -272,6 +272,7 @@ $(document).ready(function () {
      },
      c_number: {
        required : true,
+       number: true
       
      },
      
@@ -295,9 +296,8 @@ $(document).ready(function () {
             $(".btnsbt").html('<i class="fa fa-spinner"></i> Processing...');
             $(".btnsbt").prop('disabled', true);
             $("#popupalert").hide();
-            $("#alert").hide();
-            tableLoad();
             
+               
           }
       })
   
@@ -309,10 +309,11 @@ $(document).ready(function () {
         if(response.status==0){
           $("#popupalert").show();
           $("#popupalert").html(response.html);
+          $(".btnsbt").html('Submit');
+          $(".btnsbt").prop('disabled', false);
         }else{
-          $("#alert").show();
           $('#form-dialog').modal('hide');
-          $("#alert").html(response.html);
+          location.reload();
         }
           
        })
@@ -321,4 +322,5 @@ $(document).ready(function () {
   });
   
   });
+
   

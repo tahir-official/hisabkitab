@@ -14,22 +14,16 @@
    <div class="row page-title-header">
       <div class="col-12">
          <div class="page-header">
-            <h4 class="page-title">Broker Management</h4>
+            <h4 class="page-title">Broker Management</h4> <button type="button"  onclick="return loadPopupUser('broker',0);" class="btn btn-primary toolbar-item">Add Broker</button>
             <div class="quick-link-wrapper w-100 d-md-flex flex-md-wrap">
                <ul class="quick-links ml-auto">
                   <li><a href="<?=MAIN_URL?>">Home</a></li>
-                  <li><a href="<?=$url?>">Broker Management</a></li>
+                  <li><a href="<?=$url?>">Broker Management</a>  </li>
                </ul>
             </div>
          </div>
       </div>
-      <div class="col-md-12">
-         <div class="page-header-toolbar">
-            <div class="sort-wrapper">
-               <button type="button"  onclick="return loadPopupUser('broker',0);" class="btn btn-primary toolbar-item">Add Broker</button>
-            </div>
-         </div>
-      </div>
+      
    </div>
    <div id="alert">
    </div>
@@ -41,11 +35,16 @@
       <table id="mytable" class="row-border " >
         <thead>
             <tr>
+                <th>S.N.</th>
                 <th>Name</th>
-                <th>Position</th>
-                <th>Office</th>
-                <th>Age</th>
-                <th>Start date</th>
+                <th>Email Address</th>
+                <th>Number</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Status</th>
+                <th>Craete Date</th>
+                <th>Action</th>
                
             </tr>
         </thead>
