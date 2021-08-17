@@ -2,8 +2,185 @@
 include_once('../include/functions.php');
 $commonFunction= new functions();
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+/*get broker table data action start*/
+if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'getTableDataBroker')
+{  
+        $store_id= $_SESSION['store_id'];
+        $tableName='users';
+	    $column = array("user_type", "fname","email_address", "c_number","address","city_id","state_id","status","cdate");
+
+        $query = "SELECT U.id,U.user_type,U.fname,U.lname,U.email_address,U.c_number,U.address,U.city_id,U.state_id,U.status,U.store_id,U.cdate,C.city,S.name FROM $tableName as U INNER JOIN cities as C
+        ON U.city_id = C.id INNER JOIN states AS S ON U.state_id = S.id ";
+        if(isset($_POST["search"]["value"]))
+        {
+            $query .= '
+            WHERE U.fname LIKE "%'.$_POST["search"]["value"].'%" 
+            OR U.lname LIKE "%'.$_POST["search"]["value"].'%" 
+            OR U.email_address LIKE "%'.$_POST["search"]["value"].'%" 
+            OR U.c_number LIKE "%'.$_POST["search"]["value"].'%" 
+            OR U.address LIKE "%'.$_POST["search"]["value"].'%"
+            OR C.city LIKE "%'.$_POST["search"]["value"].'%"
+            OR S.name LIKE "%'.$_POST["search"]["value"].'%"
+            OR U.cdate LIKE "%'.$_POST["search"]["value"].'%"
+            ';
+        }
+        $main_query="SELECT * FROM ($query) as X WHERE X.store_id=$store_id and X.user_type='broker'";
+        if(isset($_POST["order"]))
+        {
+            $main_query .= ' ORDER BY '.'X.'.$column[$_POST['order']['0']['column']].' '.$_POST['order']['0']['dir'].' ';
+        }
+        else
+        {
+            $main_query .= ' ORDER BY X.id DESC ';
+        }
+       //echo $main_query ;
+        
+        $query1 = '';
+
+        if($_POST["length"] != -1)
+        {
+            $query1 = 'LIMIT ' . $_POST['start'] . ', ' . $_POST['length'];
+        }
+        $statement = $conn->query($main_query);
+        $number_filter_row = $statement->num_rows;
+        $result = $conn->query($main_query . $query1);
+        $data = array();
+        $i=1;
+        foreach($result as $row)
+        {
+            $sub_array = array();
+            $sub_array[] = $i;
+            $sub_array[] = $row['fname'].' '.$row['lname'];
+            $sub_array[] = $row['email_address'];
+            $sub_array[] = $row['c_number'];
+            $sub_array[] = $row['address'];
+            $sub_array[] = $row['city'];
+            $sub_array[] = $row['name'];
+            if($row['status']==0){
+                $changeStatus="return changeUserStatus('".$row['id']."',1,'broker')";
+                $status='<a class="stbtn" href="javascript:void(0)" onClick="'.$changeStatus.'"><label style="color: white;cursor: pointer;" class="badge badge-success">Active</label></a>';
+            }else{
+                $changeStatus="return changeUserStatus('".$row['id']."',0,'broker')";
+                $status='<a class="stbtn" href="javascript:void(0)" onClick="'.$changeStatus.'"><label style="color: white;cursor: pointer;" class="badge badge-danger">Deactive</label></a>';
+            }
+            $sub_array[] = $status;
+            $sub_array[] = $row['cdate'];
+            $loadPopupUser="loadPopupUser('broker','".$row['id']."')";
+            $sub_array[] = '<a href="javascript:void(0)" onClick="'.$loadPopupUser.'"><label style="color: white; cursor: pointer;" class="badge badge-danger">Edit</label></a>';
+            $data[] = $sub_array;
+            $i++;
+        }
+
+        /*this code for all records*/
+        $query_all = "SELECT * FROM $tableName where user_type = 'broker' and store_id  = $store_id ";
+        $statement_all = $conn->query($query_all);
+        $statement_all_count= $statement_all->num_rows;
+
+        $output = array(
+            "draw"		=>	intval($_POST["draw"]),
+            "recordsTotal"	=>	$statement_all_count,
+            "recordsFiltered"	=>	$number_filter_row,
+            "data"	=>	$data
+        );
+
+        echo json_encode($output);
+}
+/*get broker table data action end*/
+/*get dealer table data action start*/
+else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'getTableDataDealer')
+{  
+        $store_id= $_SESSION['store_id'];
+        $tableName='users';
+	    $column = array("user_type", "fname","email_address", "c_number","address","city_id","state_id","status","cdate");
+
+        $query = "SELECT U.id,U.user_type,U.fname,U.lname,U.email_address,U.c_number,
+        U.address,U.city_id,U.state_id,U.status,U.store_id,U.broker_id,U.cdate,C.city,S.name FROM $tableName as U INNER JOIN cities as C
+        ON U.city_id = C.id INNER JOIN states AS S ON U.state_id = S.id ";
+        if(isset($_POST["search"]["value"]))
+        {
+            $query .= '
+            WHERE U.fname LIKE "%'.$_POST["search"]["value"].'%" 
+            OR U.lname LIKE "%'.$_POST["search"]["value"].'%" 
+            OR U.email_address LIKE "%'.$_POST["search"]["value"].'%" 
+            OR U.c_number LIKE "%'.$_POST["search"]["value"].'%" 
+            OR U.address LIKE "%'.$_POST["search"]["value"].'%"
+            OR C.city LIKE "%'.$_POST["search"]["value"].'%"
+            OR S.name LIKE "%'.$_POST["search"]["value"].'%"
+            OR U.cdate LIKE "%'.$_POST["search"]["value"].'%"
+            ';
+        }
+        
+        $main_query="SELECT * FROM ($query) as X WHERE X.store_id=$store_id and X.user_type='dealer'";
+        if(isset($_POST["order"]))
+        {
+            $main_query .= ' ORDER BY '.'X.'.$column[$_POST['order']['0']['column']].' '.$_POST['order']['0']['dir'].' ';
+        }
+        else
+        {
+            $main_query .= ' ORDER BY X.id DESC ';
+        }
+       //echo $main_query ;
+        
+        $query1 = '';
+
+        if($_POST["length"] != -1)
+        {
+            $query1 = 'LIMIT ' . $_POST['start'] . ', ' . $_POST['length'];
+        }
+        $statement = $conn->query($main_query);
+        $number_filter_row = $statement->num_rows;
+        $result = $conn->query($main_query . $query1);
+        $data = array();
+        $i=1;
+        foreach($result as $row)
+        {
+            $sub_array = array();
+            $sub_array[] = $i;
+            $sub_array[] = $row['fname'].' '.$row['lname'];
+            $sub_array[] = $row['email_address'];
+            $sub_array[] = $row['c_number'];
+            $sub_array[] = $row['address'];
+            $sub_array[] = $row['city'];
+            $sub_array[] = $row['name'];
+            $usertable = '"users"';
+            $userconditions = "id='".$row['broker_id']."'";
+            $userconditions = '"'.$userconditions.'"';
+            $userRun = $conn->query("call fetchRecord($usertable,$userconditions,'')");
+            $userData = $userRun->fetch_assoc();
+            $conn->next_result();
+            $sub_array[] = $userData['fname'].' '.$userData['lname'];
+            if($row['status']==0){
+                $changeStatus="return changeUserStatus('".$row['id']."',1,'dealer')";
+                $status='<a class="stbtn" href="javascript:void(0)" onClick="'.$changeStatus.'"><label style="color: white;cursor: pointer;" class="badge badge-success">Active</label></a>';
+            }else{
+                $changeStatus="return changeUserStatus('".$row['id']."',0,'dealer')";
+                $status='<a class="stbtn" href="javascript:void(0)" onClick="'.$changeStatus.'"><label style="color: white;cursor: pointer;" class="badge badge-danger">Deactive</label></a>';
+            }
+            $sub_array[] = $status;
+            $sub_array[] = $row['cdate'];
+            $loadPopupUser="loadPopupUser('dealer','".$row['id']."')";
+            $sub_array[] = '<a href="javascript:void(0)" onClick="'.$loadPopupUser.'"><label style="color: white; cursor: pointer;" class="badge badge-danger">Edit</label></a>';
+            $data[] = $sub_array;
+            $i++;
+        }
+
+        /*this code for all records*/
+        $query_all = "SELECT * FROM $tableName where user_type = 'dealer' and store_id  = $store_id ";
+        $statement_all = $conn->query($query_all);
+        $statement_all_count= $statement_all->num_rows;
+
+        $output = array(
+            "draw"		=>	intval($_POST["draw"]),
+            "recordsTotal"	=>	$statement_all_count,
+            "recordsFiltered"	=>	$number_filter_row,
+            "data"	=>	$data
+        );
+
+        echo json_encode($output);
+}
+/*get dealer table data action end*/
 /*load user popup process start*/
-if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'loadPopupUser'){  
+else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'loadPopupUser'){  
 	//method check statement
 	if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stateTable = '"states"';
@@ -52,6 +229,7 @@ if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'loadPopupUser'){
             $cityconditions = '"'.$cityconditions.'"';
             $cityrun = $conn->query("call fetchRecord($cityTable,$cityconditions,'')");
             $citiesRow = $cityrun->fetch_all(MYSQLI_ASSOC);
+            $conn->next_result();
             $cities='<option>Select City</option>';
             foreach($citiesRow as $city){
             $selectcity='';    
@@ -71,9 +249,32 @@ if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'loadPopupUser'){
         if($_POST['user_type']=='broker'){
             $modal_title .='Broker';
             $usertype='<input  name="user_type" value="broker" class="form-control" type="hidden" >';
+            $brokeroption='';
         }else{
-            $modal_title .='dealer';
+            $modal_title .='Dealer';
             $usertype='<input  name="user_type" value="dealer" class="form-control" type="hidden" >';
+
+            $brokerTable = '"users"';
+            $brokerconditions = "user_type='broker' and store_id='".$_SESSION['store_id']."'";
+            $brokerconditions = '"'.$brokerconditions.'"';
+            $brokerrun = $conn->query("call fetchRecord($brokerTable,$brokerconditions,'')");
+            $brokerRow = $brokerrun->fetch_all(MYSQLI_ASSOC);
+            $brokerdropdwon='<option value="0">Select broker</option>';
+            foreach($brokerRow as $broker){
+            $selectbroker=''; 
+            if($_POST['data_id']!=0){
+                if($broker['id']==$userData['broker_id']){$selectbroker='selected';} 
+            }   
+            $brokerdropdwon .='<option '.$selectbroker.' value="'.$broker['id'].'">'.$broker['fname'].' '.$broker['lname'].'</option>';
+            }
+
+            $brokeroption='<div class="form-group pmd-textfield pmd-textfield-floating-label">
+                <label for="broker_id">Select Broker</label>
+                <select id="broker_id" name="broker_id" class="form-control">
+                    '.$brokerdropdwon.'
+                </select>
+            </div>';
+
         }
         
 
@@ -120,6 +321,7 @@ if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'loadPopupUser'){
                                                  '.$cities.'
                                             </select>
                                         </div>
+                                        '.$brokeroption.'
                                      
                                 </div>
                                 <div class="modal-footer">
@@ -138,102 +340,7 @@ if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'loadPopupUser'){
 echo json_encode($response);
 }
 /*load user popup process end*/
-/*get table data action start*/
-else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'getTableDataBroker')
-{  
-        $store_id= $_SESSION['store_id'];
-        $tableName='users';
-	    $column = array("user_type", "fname","email_address", "c_number","address","city_id","state_id","status","cdate");
 
-        $query = "SELECT * FROM $tableName WHERE  user_type='broker' and store_id  = $store_id ";
-        if(isset($_POST["search"]["value"]))
-        {
-            $query .= '
-            and fname LIKE "%'.$_POST["search"]["value"].'%" 
-            OR lname LIKE "%'.$_POST["search"]["value"].'%" 
-            OR email_address LIKE "%'.$_POST["search"]["value"].'%" 
-            OR c_number LIKE "%'.$_POST["search"]["value"].'%" 
-            OR address LIKE "%'.$_POST["search"]["value"].'%"
-            OR city_id LIKE "%'.$_POST["search"]["value"].'%"
-            OR state_id LIKE "%'.$_POST["search"]["value"].'%"
-            OR cdate LIKE "%'.$_POST["search"]["value"].'%"
-            ';
-        }
-        $main_query="SELECT * FROM ($query) as X WHERE X.store_id=1 and X.user_type='broker'";
-        if(isset($_POST["order"]))
-        {
-            $main_query .= 'ORDER BY '.'X.'.$column[$_POST['order']['0']['column']].' '.$_POST['order']['0']['dir'].' ';
-        }
-        else
-        {
-            $main_query .= 'ORDER BY X.id DESC ';
-        }
-        
-        $query1 = '';
-
-        if($_POST["length"] != -1)
-        {
-            $query1 = 'LIMIT ' . $_POST['start'] . ', ' . $_POST['length'];
-        }
-        $statement = $conn->query($main_query);
-        $number_filter_row = $statement->num_rows;
-        $result = $conn->query($main_query . $query1);
-        $data = array();
-        $i=1;
-        foreach($result as $row)
-        {
-            $sub_array = array();
-            $sub_array[] = $i;
-            $sub_array[] = $row['fname'].' '.$row['lname'];
-            $sub_array[] = $row['email_address'];
-            $sub_array[] = $row['c_number'];
-            $sub_array[] = $row['address'];
-            
-            $citytable = '"cities"';
-            $cityconditions = "id='".$row['city_id']."'";
-            $cityconditions = '"'.$cityconditions.'"';
-            $cityRun = $conn->query("call fetchRecord($citytable,$cityconditions,'')");
-            $cityData = $cityRun->fetch_assoc();
-            $conn->next_result();
-            $sub_array[] = $cityData['city'];
-
-            $statetable = '"states"';
-            $stateconditions = "id='".$row['state_id']."'";
-            $stateconditions = '"'.$stateconditions.'"';
-            $stateRun = $conn->query("call fetchRecord($statetable,$stateconditions,'')");
-            $stateData = $stateRun->fetch_assoc();
-            $conn->next_result();
-            $sub_array[] = $stateData['name'];
-            if($row['status']==0){
-                $changeStatus="return changeUserStatus('".$row['id']."',1,'broker')";
-                $status='<a class="stbtn" href="javascript:void(0)" onClick="'.$changeStatus.'"><label style="color: white;cursor: pointer;" class="badge badge-success">Active</label></a>';
-            }else{
-                $changeStatus="return changeUserStatus('".$row['id']."',0,'broker')";
-                $status='<a class="stbtn" href="javascript:void(0)" onClick="'.$changeStatus.'"><label style="color: white;cursor: pointer;" class="badge badge-danger">Deactive</label></a>';
-            }
-            $sub_array[] = $status;
-            $sub_array[] = $row['cdate'];
-            $loadPopupUser="loadPopupUser('broker','".$row['id']."')";
-            $sub_array[] = '<a href="javascript:void(0)" onClick="'.$loadPopupUser.'"><label style="color: white; cursor: pointer;" class="badge badge-danger">Edit</label></a>';
-            $data[] = $sub_array;
-            $i++;
-        }
-
-        /*this code for all records*/
-        $query_all = "SELECT * FROM $tableName where user_type = 'broker' and store_id  = $store_id ";
-        $statement_all = $conn->query($query_all);
-        $statement_all_count= $statement_all->num_rows;
-
-        $output = array(
-            "draw"		=>	intval($_POST["draw"]),
-            "recordsTotal"	=>	$statement_all_count,
-            "recordsFiltered"	=>	$number_filter_row,
-            "data"	=>	$data
-        );
-
-        echo json_encode($output);
-}
-/*get table data action end*/
 /*user data process*/
 else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'userData'){ 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -251,7 +358,7 @@ else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'userData'){
         if($user_id==0){
 
             $userstable = '"users"';
-            $usersconditions = "email_address='".$_POST['email_address']."' and user_type='broker' ";
+            $usersconditions = "email_address='".$_POST['email_address']."' and user_type='".$user_type."'  and store_id='".$store_id."' ";
             $usersconditions = '"'.$usersconditions.'"';
             $usersRun = $conn->query("call fetchRecord($userstable,$usersconditions,'')");
             $conn->next_result();
@@ -259,15 +366,26 @@ else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'userData'){
 		    {
                 
                 $userstable2 = '"users"';
-                $usersconditions2 = "c_number='".$_POST['c_number']."'  and user_type='broker'";
+                $usersconditions2 = "c_number='".$_POST['c_number']."'  and user_type='".$user_type."' and store_id='".$store_id."'";
                 $usersconditions2 = '"'.$usersconditions2.'"';
                 $usersRun2 = $conn->query("call fetchRecord($userstable2,$usersconditions2,'')");
                 $conn->next_result();
                 if($usersRun2->num_rows <= 0)
 		        {
-                    $sql = "INSERT INTO users ".
-                    "(user_type,fname,lname,c_number,email_address,address,city_id,state_id,store_id) "."VALUES ".
-                    "('$user_type','$fname','$lname','$c_number','$email_address','$address','$city_id','$state_id','$store_id')";
+                    
+                    
+                    
+                        if($user_type=='broker'){
+                            $sql = "INSERT INTO users ".
+                            "(user_type,fname,lname,c_number,email_address,address,city_id,state_id,store_id) "."VALUES ".
+                            "('$user_type','$fname','$lname','$c_number','$email_address','$address','$city_id','$state_id','$store_id')";
+                        }else{
+                            $broker_id=$_POST['broker_id'];
+                            $sql = "INSERT INTO users ".
+                            "(user_type,fname,lname,c_number,email_address,address,city_id,state_id,store_id,broker_id) "."VALUES ".
+                            "('$user_type','$fname','$lname','$c_number','$email_address','$address','$city_id','$state_id','$store_id','$broker_id')";
+                        }
+                    
                 
                         if ($conn->query($sql)) {
 
@@ -298,7 +416,7 @@ else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'userData'){
         }else{
 
             $userstable = '"users"';
-            $usersconditions = "email_address='".$_POST['email_address']."' and user_type='broker' and id != '".$user_id."' ";
+            $usersconditions = "email_address='".$_POST['email_address']."' and user_type='".$user_type."' and store_id='".$store_id."' and id != '".$user_id."' ";
             $usersconditions = '"'.$usersconditions.'"';
             $usersRun = $conn->query("call fetchRecord($userstable,$usersconditions,'')");
             $conn->next_result();
@@ -306,16 +424,19 @@ else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'userData'){
 		    {
                 
                 $userstable2 = '"users"';
-                $usersconditions2 = "c_number='".$_POST['c_number']."'  and user_type='broker' and id != '".$user_id."'";
+                $usersconditions2 = "c_number='".$_POST['c_number']."'  and user_type='".$user_type."' and store_id='".$store_id."' and id != '".$user_id."'";
                 $usersconditions2 = '"'.$usersconditions2.'"';
                 $usersRun2 = $conn->query("call fetchRecord($userstable2,$usersconditions2,'')");
                 $conn->next_result();
                 if($usersRun2->num_rows <= 0)
 		        {
-                   
-
-                     $sql = "UPDATE users SET fname='".$fname."',lname='".$lname."',c_number='".$c_number."',email_address='".$email_address."',
-                          address='".$address."',city_id='".$city_id."',state_id='".$state_id."' WHERE id='".$user_id."'";
+                        $other_update="";
+                        if($user_type=='dealer'){
+                        $broker_id=$_POST['broker_id'];
+                        $other_update=",broker_id='".$broker_id."'";
+                        }
+                        $sql = "UPDATE users SET fname='".$fname."',lname='".$lname."',c_number='".$c_number."',email_address='".$email_address."',
+                          address='".$address."',city_id='".$city_id."',state_id='".$state_id."' $other_update WHERE id='".$user_id."'";
                 
                         if ($conn->query($sql)) {
 

@@ -21,7 +21,7 @@
          </a>
       </li>
       <li class="nav-item">
-         <a class="nav-link" href="<?=MAIN_URL?>/dashboard.php">
+         <a class="nav-link" href="<?=MAIN_URL?>/dealer_management.php">
          <i class="menu-icon typcn typcn-document-text"></i>
          <span class="menu-title">Dealer Management</span>
          </a>
