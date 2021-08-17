@@ -205,10 +205,11 @@ else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'getTableDataBroker
             $conn->next_result();
             $sub_array[] = $stateData['name'];
             if($row['status']==0){
-                $changeStatus="changeStatus('".$row['id']."')";
-                $status='<a  href="javascript:void(0)" onClick="changeStatus()"><label style="color: white;cursor: pointer;" class="badge badge-success">Active</label></a>';
+                $changeStatus="return changeUserStatus('".$row['id']."',1,'broker')";
+                $status='<a class="stbtn" href="javascript:void(0)" onClick="'.$changeStatus.'"><label style="color: white;cursor: pointer;" class="badge badge-success">Active</label></a>';
             }else{
-                $status='<a  href="javascript:void(0)" onClick="changeStatus()"><label style="color: white;cursor: pointer;" class="badge badge-danger">Deactive</label></a>';
+                $changeStatus="return changeUserStatus('".$row['id']."',0,'broker')";
+                $status='<a class="stbtn" href="javascript:void(0)" onClick="'.$changeStatus.'"><label style="color: white;cursor: pointer;" class="badge badge-danger">Deactive</label></a>';
             }
             $sub_array[] = $status;
             $sub_array[] = $row['cdate'];
@@ -349,3 +350,40 @@ else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'userData'){
     echo json_encode($response);
 }
 /*user data process end*/
+else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'changeUserStatus'){ 
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $user_id=$_POST['user_id'];
+        $status=$_POST['status'];
+        $user_type=$_POST['user_type'];
+
+        $sql = "UPDATE users SET status='".$status."' WHERE id='".$user_id."'";
+
+        if ($conn->query($sql)) {
+        if($status==1){
+            $alertstatus='Deactivated';
+        }else{
+            $alertstatus='Activated';
+        }    
+
+        if($user_type=='broker'){
+            $_SESSION['message'] = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> Broker '.$alertstatus.' Successfully !!</div>';
+        }else{
+            $_SESSION['message'] = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> Dealer '.$alertstatus.' Successfully !!</div>';
+        }
+        $response['status'] =1;
+        
+        }
+        if ($conn->errno) {
+            $response['html'] ='<div class="modal-body"><div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Something Went Wrong !!</div></div>';
+            $response['status'] =0;
+        }
+
+
+    }
+    else{
+		//error message
+		$response['html'] ='<div class="modal-body"><div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Something Went Wrong !!</div></div>';
+		$response['status'] =0;
+	}
+    echo json_encode($response);
+}

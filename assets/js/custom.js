@@ -323,4 +323,45 @@ $(document).ready(function () {
   
   });
 
+  function changeUserStatus(user_id,status,user_type){
+    if(status==1){
+      var alertmessage='Are you sure you want to deactive this '+user_type+ '?';
+    }else{
+      var alertmessage='Are you sure you want to active this '+user_type+ '?';
+    }
+    if(confirm(alertmessage)){
+          $.ajax({
+            method: "POST",
+            url: baseUrl + "/model/userModel.php?action=changeUserStatus",
+            data: {user_id:user_id,status:status,user_type:user_type},
+            dataType: 'JSON',
+            beforeSend: function() {
+               $('.stbtn').attr("disabled",true);
+               $("#alert").hide();
+             }
+        })
+
+        .fail(function(response) {
+            alert( "Try again later." );
+        })
+
+        .done(function(response) {
+          if(response.status==0){
+            $('.stbtn').attr("disabled",false);
+          }else{
+            $('#form-dialog').modal('hide');
+            location.reload();
+          }
+          $("#alert").html(response.message);
+          $("#alert").show();
+            
+        })
+       
+      }
+      else{
+          return false;
+      }
+     
+  }
+
   
