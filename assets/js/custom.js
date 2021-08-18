@@ -256,70 +256,70 @@ function tableLoad(loadurl){
 
 $(document).ready(function () {
 
-  $('#userForm').validate({ 
-    
-     rules: {
-     fname: {
-       required : true
-       
-     },
-     lname: {
-       required : true
-     },
-     email_address: {
-        required: true,
-        email: true
-     },
-     c_number: {
-       required : true,
-       number: true
-      
-     },
-     
-     state_id: {
-       required : true,
-       
-     },
-     city_id: {
-       required : true,
-       
-     }
-   },
-      submitHandler: function (form) { 
-        let formData = $('#userForm').serialize();
-        $.ajax({
-          method: "POST",
-          url: baseUrl + "/model/userModel.php?action=userData",
-          data: formData,
-          dataType: 'JSON',
-          beforeSend: function() {
-            $(".btnsbt").html('<i class="fa fa-spinner"></i> Processing...');
-            $(".btnsbt").prop('disabled', true);
-            $("#popupalert").hide();
-            
-               
-          }
-      })
-  
-      .fail(function(response) {
-          alert( "Try again later." );
-      })
-  
-      .done(function(response) {
-        if(response.status==0){
-          $("#popupalert").show();
-          $("#popupalert").html(response.html);
-          $(".btnsbt").html('Submit');
-          $(".btnsbt").prop('disabled', false);
-        }else{
-          $('#form-dialog').modal('hide');
-          location.reload();
-        }
+      $('#userForm').validate({ 
+        
+        rules: {
+        fname: {
+          required : true
           
-       })
-          return false; 
-      }
-  });
+        },
+        lname: {
+          required : true
+        },
+        email_address: {
+            required: true,
+            email: true
+        },
+        c_number: {
+          required : true,
+          number: true
+          
+        },
+        
+        state_id: {
+          required : true,
+          
+        },
+        city_id: {
+          required : true,
+          
+        }
+      },
+          submitHandler: function (form) { 
+            let formData = $('#userForm').serialize();
+            $.ajax({
+              method: "POST",
+              url: baseUrl + "/model/userModel.php?action=userData",
+              data: formData,
+              dataType: 'JSON',
+              beforeSend: function() {
+                $(".btnsbt").html('<i class="fa fa-spinner"></i> Processing...');
+                $(".btnsbt").prop('disabled', true);
+                $("#popupalert").hide();
+                
+                  
+              }
+          })
+      
+          .fail(function(response) {
+              alert( "Try again later." );
+          })
+      
+          .done(function(response) {
+            if(response.status==0){
+              $("#popupalert").show();
+              $("#popupalert").html(response.html);
+              $(".btnsbt").html('Submit');
+              $(".btnsbt").prop('disabled', false);
+            }else{
+              $('#form-dialog').modal('hide');
+              location.reload();
+            }
+              
+          })
+              return false; 
+          }
+      });
   
   });
 

@@ -36,10 +36,10 @@
          <div class="collapse" id="ui-basic">
             <ul class="nav flex-column sub-menu">
                <li class="nav-item">
-                  <a class="nav-link" href="pages/ui-features/buttons.html">Add Bill</a>
+                  <a class="nav-link" href="<?=MAIN_URL?>/all_bills.php"> All Bills</a>
                </li>
                <li class="nav-item">
-                  <a class="nav-link" href="pages/ui-features/dropdowns.html">All Bills</a>
+                  <a class="nav-link" href="<?=MAIN_URL?>/add_bill.php"> Add Bill</a>
                </li>
               
             </ul>

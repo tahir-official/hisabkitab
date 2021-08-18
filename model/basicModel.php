@@ -1,6 +1,6 @@
 <?php
 include_once('../include/functions.php');
-$db= new functions();
+$commonFunction= new functions();
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 /*login action start*/
 
