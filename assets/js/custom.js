@@ -37,7 +37,7 @@ $('#loginFrom').submit(function(e) {
     .always(function() {
         $(".btnLogin").html('Login');
         $(".btnLogin").prop('disabled', false);
-   });
+    });
     return false;
 });
 /*login script end*/
@@ -217,6 +217,8 @@ function loadCity(state_id,set_id){
       $("#"+set_id).html(response.html);
         
      })
+
+     
     
   return false;
 }
@@ -314,6 +316,10 @@ $(document).ready(function () {
             }
               
           })
+          .always(function() {
+            $(".btnsbt").html('Submit');
+              $(".btnsbt").prop('disabled', false);
+           });
               return false; 
           }
       });
@@ -355,6 +361,10 @@ $(document).ready(function () {
           $("#alert").show();
             
         })
+
+        .always(function() {
+          $('.stbtn').attr("disabled",false);
+         });
        
       }
       else{

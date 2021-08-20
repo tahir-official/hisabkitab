@@ -2,59 +2,129 @@
 include_once('../include/functions.php');
 $commonFunction= new functions();
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-/*get cities action start*/
+/*add bill action start*/
 if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'addBill')
 {   
 	//method check statement
 	if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $uploadImage = false;
-		if($_FILES["bill_image"]['error'] == 0){
-            $filename = rand(100, 500) .time() .rand(100, 500) ."." .ltrim(strstr($_FILES['bill_image']['name'], '.'), '.');
-            $target_file = "../assets/images/bill_image/" .$filename;
-            if(move_uploaded_file($_FILES["bill_image"]["tmp_name"], $target_file)){
+        $store_id=$_SESSION['store_id'];
+        $billtable = '"bills"';
+        $billconditions = "bill_number='".$_POST['bill_number']."' and  store_id='".$store_id."' ";
+        $billconditions = '"'.$billconditions.'"';
+        $billRun = $conn->query("call fetchRecord($billtable,$billconditions,'')");
+        $conn->next_result();
+        if($billRun->num_rows <= 0)
+        {
+            $uploadImage = false;
+            if($_FILES["bill_image"]['error'] == 0){
+                $filename = rand(100, 500) .time() .rand(100, 500) ."." .ltrim(strstr($_FILES['bill_image']['name'], '.'), '.');
+                $target_file = "../assets/images/bill_image/" .$filename;
+                if(move_uploaded_file($_FILES["bill_image"]["tmp_name"], $target_file)){
+                    
+                    $uploadImage = true;
+                }
+                $fileD = '/assets/images/bill_image/' .$filename;
+                $fileData= ", `bill_image` = '" .$fileD ."'";
                 
-                $uploadImage = true;
             }
-            $fileD = '/assets/images/bill_image/' .$filename;
-            $fileData= ", `bill_image` = '" .$fileD ."'";
+            if($uploadImage){
+            $bill_number_auto='BI'.rand(10000,1000000);
+            $sql = "insert into bills set bill_number_auto = '".$bill_number_auto."', bill_number = '".$_POST['bill_number']."',
+            dealer_id = '".$_POST['dealer_id']."',bill_amount = '".$_POST['bill_amount']."',bill_date = '".$_POST['bill_date']."',
+            create_date = '".date('Y-m-d H:i:s')."',store_id = '".$_SESSION['store_id']."' $fileData ";
+            if ($conn->query($sql)) {
+    
+                $_SESSION['message'] = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> Bill Added Successfully !!</div>';
+                $response['url'] =MAIN_URL.'/all_bills.php';
+                $response['status'] =1;
+            
+            }
+            if ($conn->errno) {
+                $response['message'] ='<div class="modal-body"><div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Something Went Wrong !!</div></div>';
+                $response['status'] =0;
+            }
+    
+            }else{
+            //error message
+            $response['message'] ='<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Bill image not upload try again !!</div>';
+            $response['status'] =0;   
+            }
+        }else{
+            
+            $response['message'] ='<div class="modal-body"><div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Bill Number already exists, Please Enter different Bill Number !!</div></div>';
+            $response['status'] =0;
             
         }
-        if($uploadImage){
-        $bill_number_auto='BI'.rand(10000,1000000);
-        $sql = "insert into bills set bill_number_auto = '".$bill_number_auto."', bill_number = '".$_POST['bill_number']."',
-        dealer_id = '".$_POST['dealer_id']."',bill_amount = '".$_POST['bill_amount']."',bill_date = '".$_POST['bill_date']."',
-        create_date = '".date('Y-m-d H:i:s')."',store_id = '".$_SESSION['store_id']."' $fileData ";
-        if ($conn->query($sql)) {
 
-            $_SESSION['message'] = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> Bill Added Successfully !!</div>';
-            $response['url'] =MAIN_URL.'/all_bills.php';
-            $response['status'] =1;
-        
-        }
-        if ($conn->errno) {
-            $response['html'] ='<div class="modal-body"><div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Something Went Wrong !!</div></div>';
-            $response['status'] =0;
-        }
-
-        }else{
-        //error message
-		$response['html'] ='<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Bill image not upload try again !!</div>';
-		$response['status'] =0;   
-        }
-        
-
-		
-
-	}else{
+   }else{
 		//error message
-		$response['html'] ='<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Something Went Wrong !!</div>';
+		$response['message'] ='<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Something Went Wrong !!</div>';
 		$response['status'] =0;
 		
 	}
 	
 	 echo json_encode($response);
 }
-/*get cities action end*/
+/*add bill action end*/
+/*add bill action start*/
+else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'editBill')
+{   
+	//method check statement
+	if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $store_id=$_SESSION['store_id'];
+        $billtable = '"bills"';
+        $billconditions = "bill_number='".$_POST['bill_number']."' and  store_id='".$store_id."'  and bill_id != '".$_POST['bill_id']."' ";
+        $billconditions = '"'.$billconditions.'"';
+        $billRun = $conn->query("call fetchRecord($billtable,$billconditions,'')");
+        $conn->next_result();
+        if($billRun->num_rows <= 0)
+        {
+            $fileData= ", `bill_image` = '" .$_POST['bill_image'] ."'";
+            if($_FILES["bill_image"]['error'] == 0){
+                $filename = rand(100, 500) .time() .rand(100, 500) ."." .ltrim(strstr($_FILES['bill_image']['name'], '.'), '.');
+                $target_file = "../assets/images/bill_image/" .$filename;
+                if(move_uploaded_file($_FILES["bill_image"]["tmp_name"], $target_file)){
+                    
+                    
+                }
+                $fileD = '/assets/images/bill_image/' .$filename;
+                $fileData= ", `bill_image` = '" .$fileD ."'";
+                
+            }
+           
+            $sql = "UPDATE bills SET bill_number = '".$_POST['bill_number']."',
+            dealer_id = '".$_POST['dealer_id']."',bill_amount = '".$_POST['bill_amount']."',bill_date = '".$_POST['bill_date']."' $fileData
+            WHERE bill_id='".$_POST['bill_id']."'";
+           if ($conn->query($sql)) {
+    
+                $_SESSION['message'] = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> Bill Updated Successfully !!</div>';
+                $response['url'] =MAIN_URL.'/all_bills.php';
+                $response['status'] =1;
+            
+            }
+            if ($conn->errno) {
+                $response['message'] ='<div class="modal-body"><div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Something Went Wrong !!</div></div>';
+                $response['status'] =0;
+            }
+    
+            
+        }else{
+            
+            $response['message'] ='<div class="modal-body"><div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Bill Number already exists, Please Enter different Bill Number !!</div></div>';
+            $response['status'] =0;
+            
+        }
+
+   }else{
+		//error message
+		$response['message'] ='<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Something Went Wrong !!</div>';
+		$response['status'] =0;
+		
+	}
+	
+	 echo json_encode($response);
+}
+/*add bill action end*/
 /*get bill table data action start*/
 else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'getTableDataBill')
 {  
@@ -114,8 +184,8 @@ else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'getTableDataBill')
             $sub_array[] = $row['bill_amount'];
             $sub_array[] = $row['bill_amount'];
             $sub_array[] = $row['bill_amount'];
-            $sub_array[] = $row['bill_date'];
-            $sub_array[] = $row['create_date'];
+            $sub_array[] = $commonFunction->dateFormat($row['bill_date']);
+            $sub_array[] = $commonFunction->dateFormat($row['create_date']);
             // $usertable = '"users"';
             // $userconditions = "id='".$row['broker_id']."'";
             // $userconditions = '"'.$userconditions.'"';
@@ -132,8 +202,7 @@ else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'getTableDataBill')
             }
             $sub_array[] = $status;
             
-            $loadPopupUser="loadPopupUser('dealer','".$row['bill_id']."')";
-            $sub_array[] = '<a href="javascript:void(0)" onClick="'.$loadPopupUser.'"><label style="color: white; cursor: pointer;" class="badge badge-danger">Edit</label></a>';
+            $sub_array[] = '<a href="'.MAIN_URL.'/edit_bill.php?bill_id='.$row['bill_id'].'" ><label style="color: white; cursor: pointer;" class="badge badge-danger">Edit</label></a>';
             $data[] = $sub_array;
             $i++;
         }

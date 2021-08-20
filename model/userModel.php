@@ -64,7 +64,7 @@ if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'getTableDataBroker')
                 $status='<a class="stbtn" href="javascript:void(0)" onClick="'.$changeStatus.'"><label style="color: white;cursor: pointer;" class="badge badge-danger">Deactive</label></a>';
             }
             $sub_array[] = $status;
-            $sub_array[] = $row['cdate'];
+            $sub_array[] = $commonFunction->dateFormat($row['cdate']);
             $loadPopupUser="loadPopupUser('broker','".$row['id']."')";
             $sub_array[] = '<a href="javascript:void(0)" onClick="'.$loadPopupUser.'"><label style="color: white; cursor: pointer;" class="badge badge-danger">Edit</label></a>';
             $data[] = $sub_array;
@@ -95,7 +95,7 @@ else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'getTableDataDealer
 
         $query = "SELECT U.id,U.user_type,U.fname,U.lname,U.email_address,U.c_number,
         U.address,U.city_id,U.state_id,U.status,U.store_id,U.broker_id,U.cdate,C.city,S.name,U2.fname as bfname,U2.lname as blname FROM $tableName as U INNER JOIN cities as C
-        ON U.city_id = C.id INNER JOIN states AS S ON U.state_id = S.id INNER JOIN $tableName AS U2 ON U.broker_id = U2.id ";
+        ON U.city_id = C.id INNER JOIN states AS S ON U.state_id = S.id LEFT JOIN $tableName AS U2 ON U.broker_id = U2.id ";
         if(isset($_POST["search"]["value"]))
         {
             $query .= '
@@ -154,7 +154,7 @@ else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'getTableDataDealer
                 $status='<a class="stbtn" href="javascript:void(0)" onClick="'.$changeStatus.'"><label style="color: white;cursor: pointer;" class="badge badge-danger">Deactive</label></a>';
             }
             $sub_array[] = $status;
-            $sub_array[] = $row['cdate'];
+            $sub_array[] = $commonFunction->dateFormat($row['cdate']);
             $loadPopupUser="loadPopupUser('dealer','".$row['id']."')";
             $sub_array[] = '<a href="javascript:void(0)" onClick="'.$loadPopupUser.'"><label style="color: white; cursor: pointer;" class="badge badge-danger">Edit</label></a>';
             $data[] = $sub_array;

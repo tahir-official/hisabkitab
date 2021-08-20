@@ -20,44 +20,14 @@ class Functions
 		echo '<script>window.location.href="'.$location.'"</script>';
 		die(); 
 	}
+
+	function dateFormat($dateiteam)
+	{ 
+		return $newDate = date("d M,Y", strtotime($dateiteam)); 
+		 
+	}
 	
-
-	// function fetch_record($table,$conditions = false,$order_by=false,$order =false)
-	// {
-		
-	// 	$sql = "SELECT * FROM `" .$table ."`";
-	//     if($conditions){
-	//       $sql .= " WHERE " .$conditions;
-	//     }
-	//     if($order){
-    //       $sql .= " order by " .$order_by." ".$order;
-	//     }
-	//     $data = $this->query($sql);
-	// 	return $data;
-	// }
-	// function update_record($table,$content,$conditions= false)
-	// {
-		
-	// 	$sql = "UPDATE $table SET $content WHERE $conditions";
-	// 	$data = $this->query($sql);
-	// 	return $data;
-	// }
-
-	// function insert_history($store_id,$action,$message){
-
-	// 	$sql = "INSERT INTO `history`(`store_id`,`action`, `message`)
-	// 	VALUES(
-	// 		'" .$store_id."', 
-	// 		'" .$action ."',
-	// 		'" .$message ."'
-			
-	// 	)";
-	// 	$data = $this->query($sql);
-	// 	return $data;
-
-	// }
-
-	function encrypt_decrypt($string, $action)
+    function encrypt_decrypt($string, $action)
 	{
 		$encrypt_method = "AES-256-CBC";
 		$secret_key = 'AA74CDCC2BBRT935136HH7B63C27'; 
@@ -73,14 +43,7 @@ class Functions
 		}
 		return $output;
 	}
-
-
-	
-
-
-   /*basic function*/
-   
-
+    /*basic function*/
     /*Email function*/                            
 	function send_mail($to,$subject,$contant){ 
    		$from = EMAIL;

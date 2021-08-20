@@ -1,5 +1,17 @@
 <?php
    include_once('include/header.php');
+   if(!isset($_REQUEST['bill_id']) || $_REQUEST['bill_id']==''){$commonFunction->redirect(MAIN_URL.'/all_bills.php'); }
+    $billtable = '"bills"';
+    $billconditions = "bill_id='".$_REQUEST['bill_id']."' and  store_id='".$store_id."' ";
+    $billconditions = '"'.$billconditions.'"';
+    $billRun = $conn->query("call fetchRecord($billtable,$billconditions,'')");
+    $conn->next_result();
+    if($billRun->num_rows <= 0)
+    {
+        $commonFunction->redirect(MAIN_URL.'/all_bills.php');
+    }else{
+        $billData = $billRun->fetch_assoc();
+    }
 ?>
 <div class="container-fluid page-body-wrapper">
 <?php
@@ -11,7 +23,7 @@
    <div class="row page-title-header">
       <div class="col-12">
          <div class="page-header">
-            <h4 class="page-title">Add Bill</h4>
+            <h4 class="page-title">Edit Bill</h4>
             <div class="quick-link-wrapper w-100 d-md-flex flex-md-wrap">
                <ul class="quick-links ml-auto">
                   <li><a href="<?=MAIN_URL?>">Home</a></li>
@@ -33,7 +45,9 @@
                   <div class="card-body">
                      <h4 class="card-title">Bill Details </h4>
                      
-                     <form class="forms-sample" role="form" method="post" id="addBill" enctype="multipart/form-data" >
+                     <form class="forms-sample" role="form" method="post" id="editBill" enctype="multipart/form-data" >
+                        <input type="hidden" name="bill_id" value="<?=$_REQUEST['bill_id']?>" >
+                        <input type="hidden" name="bill_image" value="<?=$billData['bill_image']?>" >
                         <div class="form-group">
                             <label for="dealer_id">Select Dealer</label>
                             <select id="dealer_id" name="dealer_id" class="form-control">
@@ -45,7 +59,9 @@
                                     $dealerrun = $conn->query("call fetchRecord($dealerTable,$dealerconditions,'')");
                                     $dealerRow = $dealerrun->fetch_all(MYSQLI_ASSOC);
                                     foreach($dealerRow as $dealer){
-                                     echo '<option  value="'.$dealer['id'].'">'.$dealer['fname'].' '.$dealer['lname'].'</option>';
+                                    $selectdealer='';    
+                                    if($dealer['id']==$billData['dealer_id']){$selectdealer='selected';}    
+                                     echo '<option '.$selectdealer.' value="'.$dealer['id'].'">'.$dealer['fname'].' '.$dealer['lname'].'</option>';
                                     }
                                 ?>
                                 
@@ -53,15 +69,15 @@
                         </div>
                         <div class="form-group">
                            <label for="bill_number">Bill Number</label>
-                           <input type="text" class="form-control" name="bill_number" id="bill_number" placeholder="Enter Bill Number" value=""  >
+                           <input type="text" class="form-control" name="bill_number" id="bill_number" placeholder="Enter Bill Number" value="<?=$billData['bill_number']?>"  >
                         </div>
                         <div class="form-group">
                            <label for="bill_amount">Bill Amount</label>
-                           <input type="text"  class="form-control number_input" name="bill_amount" id="bill_amount" placeholder="0.00" value="">
+                           <input type="text"  class="form-control number_input" name="bill_amount" id="bill_amount" placeholder="0.00" value="<?=$billData['bill_amount']?>">
                         </div>
                         <div class="form-group">
                            <label for="bill_date">Bill Date</label>
-                           <input type="date" class="form-control" name="bill_date" id="bill_date"  value="">
+                           <input type="date" class="form-control" name="bill_date" id="bill_date"  value="<?=$billData['bill_date']?>">
                         </div>
                         <div class="form-group">
                            <label for="bill_image">Bill Image</label>
@@ -69,7 +85,7 @@
                            
                         </div>
                         
-                        <button type="submit" name="submit" id="addBtn" class="btn btn-success mr-2 btnSubmit">Add Bill</button>
+                        <button type="submit" name="submit" id="addBtn" class="btn btn-success mr-2 btnSubmit">Edit Bill</button>
                      </form>
                   </div>
                </div>
@@ -79,7 +95,15 @@
       <div class="col-md-3 d-flex align-items-stretch grid-margin">
          <div class="row flex-grow">
             <div class="col-12">
-               <img id="preview" style="height: 483px;"/>
+                <?php
+                $imgsrc='';
+                $imgwidht='';
+                if($billData['bill_image']!=''){
+                    $imgsrc=MAIN_URL.$billData['bill_image'];
+                    $imgwidht='width:264px;';
+                }
+                ?>
+               <img id="preview" src="<?=$imgsrc?>" style="height: 483px;<?=$imgwidht?>"/>
                 
             </div>
          </div>
@@ -98,7 +122,7 @@
     $(document).ready(function () {
        $('.number_input').mask('00000.00', { reverse: true });
 
-            $('#addBill').validate({ 
+            $('#editBill').validate({ 
     
             rules: {
             dealer_id: {
@@ -115,17 +139,12 @@
             required : true,
             },
             
-            bill_image: {
-            required : true,
-            
-            },
-            
             },
             submitHandler: function (form) { 
-            var formData = new FormData($('#addBill')[0]);
+            var formData = new FormData($('#editBill')[0]);
             $.ajax({
                 method: "POST",
-                url: baseUrl + "/model/billModel.php?action=addBill",
+                url: baseUrl + "/model/billModel.php?action=editBill",
                 data: formData,
                 dataType: 'JSON',
                 cache:false,
@@ -145,18 +164,19 @@
             })
         
             .done(function(response) {
-               if(response.status==0){
-                  $("#alert").show();
-                  $("#alert").html(response.message);
-                  $(".btnSubmit").html('Add Bill');
-                  $(".btnSubmit").prop('disabled', false);
-               }else{
-                  
-                  window.location.href = response.url;
-               }
+            if(response.status==0){
+                $("#alert").show();
+                $("#alert").html(response.message);
+                $(".btnSubmit").html('Edit Bill');
+                $(".btnSubmit").prop('disabled', false);
+            }else{
+                
+                window.location.href = response.url;
+            }
+                
             })
             .always(function() {
-               $(".btnSubmit").html('Add Bill');
+               $(".btnSubmit").html('Edit Bill');
                $(".btnSubmit").prop('disabled', false);
             });
                 return false; 
