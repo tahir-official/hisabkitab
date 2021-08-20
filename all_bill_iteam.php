@@ -29,7 +29,7 @@
   from {transform:scale(0)}
   to {transform:scale(1)}
 }
-.myclose {
+.close {
    position: absolute;
 top: 68px;
 right: 480px;
@@ -42,8 +42,8 @@ border-radius: 15px;
 border: 1px #3956f0 solid;
 }
 
-.myclose:hover,
-.myclose:focus {
+.close:hover,
+.close:focus {
   color: red;
   text-decoration: none;
   cursor: pointer;
@@ -112,7 +112,7 @@ border: 1px #3956f0 solid;
 <!-- The Modal -->
 <div id="myModal" class="modal mymodal">
    
-<span class="close myclose">&times;</span>
+<span class="close">&times;</span>
 
   
   <img class="modal-content mymodal-content" id="img01">
@@ -139,7 +139,7 @@ var captionText = document.getElementById("caption");
 modal.style.display = "block";
 modalImg.src = img.src;
 }
-var span = document.getElementsByClassName("myclose")[0];
+var span = document.getElementsByClassName("close")[0];
 span.onclick = function() {
   modal.style.display = "none";
 } 

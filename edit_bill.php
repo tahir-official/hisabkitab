@@ -84,6 +84,11 @@
                            <input type="file" class="form-control" name="bill_image" id="bill_image" onchange="loadFile(event,'preview')" value="" accept="image/*">
                            
                         </div>
+                        <div class="form-group">
+                           <label for="bill_number">Remark</label>
+                           <textarea class="form-control"  id="bill_remark" name="bill_remark" ><?=html_entity_decode($billData['bill_remark'], ENT_QUOTES)?></textarea>
+                           
+                        </div>
                         
                         <button type="submit" name="submit" id="addBtn" class="btn btn-success mr-2 btnSubmit">Edit Bill</button>
                      </form>
@@ -103,7 +108,7 @@
                     $imgwidht='width:264px;';
                 }
                 ?>
-               <img id="preview" src="<?=$imgsrc?>" style="height: 483px;<?=$imgwidht?>"/>
+               <img id="preview" src="<?=$imgsrc?>" style="height: 587px;<?=$imgwidht?>"/>
                 
             </div>
          </div>

@@ -68,6 +68,11 @@
                            <input type="file" class="form-control" name="bill_image" id="bill_image" onchange="loadFile(event,'preview')" value="" accept="image/*">
                            
                         </div>
+                        <div class="form-group">
+                           <label for="bill_number">Remark</label>
+                           <textarea class="form-control"  id="bill_remark" name="bill_remark" ></textarea>
+                           
+                        </div>
                         
                         <button type="submit" name="submit" id="addBtn" class="btn btn-success mr-2 btnSubmit">Add Bill</button>
                      </form>
@@ -79,7 +84,7 @@
       <div class="col-md-3 d-flex align-items-stretch grid-margin">
          <div class="row flex-grow">
             <div class="col-12">
-               <img id="preview" style="height: 483px;"/>
+               <img id="preview" style="height: 587px;"/>
                 
             </div>
          </div>
