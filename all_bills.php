@@ -14,11 +14,11 @@
    <div class="row page-title-header">
       <div class="col-12">
          <div class="page-header">
-            <h4 class="page-title">Dealer Management</h4> <button type="button"  onclick="return loadPopupUser('dealer',0);" class="btn btn-primary toolbar-item">Add Dealer</button>
+            <h4 class="page-title">Bills Management</h4> <a href="<?=MAIN_URL?>/add_bill.php"><button type="button"   class="btn btn-primary toolbar-item">Add Bill</button></a>
             <div class="quick-link-wrapper w-100 d-md-flex flex-md-wrap">
                <ul class="quick-links ml-auto">
                   <li><a href="<?=MAIN_URL?>">Home</a></li>
-                  <li><a href="<?=$url?>">Dealer Management</a>  </li>
+                  <li><a href="<?=$url?>">Bills Management</a>  </li>
                </ul>
             </div>
          </div>
@@ -36,15 +36,17 @@
         <thead>
             <tr>
                 <th>S.N.</th>
-                <th>Name</th>
-                <th>Email Address</th>
-                <th>Number</th>
-                <th>Address</th>
-                <th>City</th>
-                <th>State</th>
+                <th>Bill Image</th>
+                <th>Bill ID</th>
+                <th>Bill Number</th>
+                <th>Dealer Name</th>
                 <th>Broker Name</th>
+                <th>Bill Amount</th>
+                <th>Bill Paid Amount</th>
+                <th>Bill Due Amount</th>
+                <th>Bill Date</th>
+                <th>Bill Created Date</th>
                 <th>Status</th>
-                <th>Craete Date</th>
                 <th>Action</th>
                
             </tr>
@@ -62,7 +64,7 @@
 
 $(document).ready(function(){
 	
-	tableLoad(baseUrl +"/model/userModel.php?action=getTableDataDealer");
+	tableLoad(baseUrl +"/model/billModel.php?action=getTableDataBill");
 
 });	
 

@@ -233,24 +233,16 @@ function tableLoad(loadurl){
    "ajax" : {
      url:loadurl,
      type:"POST"
-   }
+   },
+   'columnDefs': [ {
+
+    'targets': '_all', /* column index */
+
+    'orderable': false, /* true or false */
+
+ }]
+   
  });
- 
- // $('#column_name').selectpicker();
-
- // $('#column_name').change(function(){
-
- // 	var all_column = ["0", "1", "2", "3", "4"];
-
- // 	var remove_column = $('#column_name').val();
-
- // 	var remaining_column = all_column.filter(function(obj) { return remove_column.indexOf(obj) == -1; });
-
- // 	dataTable.columns(remove_column).visible(false);
-
- // 	dataTable.columns(remaining_column).visible(true);
-
- // });
 
 }
 
@@ -296,6 +288,7 @@ $(document).ready(function () {
                 $(".btnsbt").html('<i class="fa fa-spinner"></i> Processing...');
                 $(".btnsbt").prop('disabled', true);
                 $("#popupalert").hide();
+                $("#alert").hide();
                 
                   
               }
@@ -308,12 +301,16 @@ $(document).ready(function () {
           .done(function(response) {
             if(response.status==0){
               $("#popupalert").show();
-              $("#popupalert").html(response.html);
+              $("#popupalert").html(response.message);
               $(".btnsbt").html('Submit');
               $(".btnsbt").prop('disabled', false);
             }else{
               $('#form-dialog').modal('hide');
-              location.reload();
+              $('#mytable').DataTable().destroy();
+              tableLoad(response.fetchTableurl);
+              $("#alert").html(response.message);
+              $("#alert").show();
+
             }
               
           })
@@ -323,7 +320,7 @@ $(document).ready(function () {
   
   });
 
-  function changeUserStatus(user_id,status,user_type){
+  function changeUserStatus(user_id,status,user_type,fetchTableurl){
     if(status==1){
       var alertmessage='Are you sure you want to deactive this '+user_type+ '?';
     }else{
@@ -350,7 +347,9 @@ $(document).ready(function () {
             $('.stbtn').attr("disabled",false);
           }else{
             $('#form-dialog').modal('hide');
-            location.reload();
+            $('#mytable').DataTable().destroy();
+            tableLoad(fetchTableurl);
+            
           }
           $("#alert").html(response.message);
           $("#alert").show();

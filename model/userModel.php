@@ -57,10 +57,10 @@ if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'getTableDataBroker')
             $sub_array[] = $row['city'];
             $sub_array[] = $row['name'];
             if($row['status']==0){
-                $changeStatus="return changeUserStatus('".$row['id']."',1,'broker')";
+                $changeStatus="return changeUserStatus('".$row['id']."',1,'broker','".MAIN_URL."/model/userModel.php?action=getTableDataBroker')";
                 $status='<a class="stbtn" href="javascript:void(0)" onClick="'.$changeStatus.'"><label style="color: white;cursor: pointer;" class="badge badge-success">Active</label></a>';
             }else{
-                $changeStatus="return changeUserStatus('".$row['id']."',0,'broker')";
+                $changeStatus="return changeUserStatus('".$row['id']."',0,'broker','".MAIN_URL."/model/userModel.php?action=getTableDataBroker')";
                 $status='<a class="stbtn" href="javascript:void(0)" onClick="'.$changeStatus.'"><label style="color: white;cursor: pointer;" class="badge badge-danger">Deactive</label></a>';
             }
             $sub_array[] = $status;
@@ -94,8 +94,8 @@ else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'getTableDataDealer
 	    $column = array("user_type", "fname","email_address", "c_number","address","city_id","state_id","status","cdate");
 
         $query = "SELECT U.id,U.user_type,U.fname,U.lname,U.email_address,U.c_number,
-        U.address,U.city_id,U.state_id,U.status,U.store_id,U.broker_id,U.cdate,C.city,S.name FROM $tableName as U INNER JOIN cities as C
-        ON U.city_id = C.id INNER JOIN states AS S ON U.state_id = S.id ";
+        U.address,U.city_id,U.state_id,U.status,U.store_id,U.broker_id,U.cdate,C.city,S.name,U2.fname as bfname,U2.lname as blname FROM $tableName as U INNER JOIN cities as C
+        ON U.city_id = C.id INNER JOIN states AS S ON U.state_id = S.id INNER JOIN $tableName AS U2 ON U.broker_id = U2.id ";
         if(isset($_POST["search"]["value"]))
         {
             $query .= '
@@ -107,6 +107,9 @@ else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'getTableDataDealer
             OR C.city LIKE "%'.$_POST["search"]["value"].'%"
             OR S.name LIKE "%'.$_POST["search"]["value"].'%"
             OR U.cdate LIKE "%'.$_POST["search"]["value"].'%"
+            OR U2.fname LIKE "%'.$_POST["search"]["value"].'%"
+            OR U2.lname LIKE "%'.$_POST["search"]["value"].'%"
+            
             ';
         }
         
@@ -142,18 +145,12 @@ else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'getTableDataDealer
             $sub_array[] = $row['address'];
             $sub_array[] = $row['city'];
             $sub_array[] = $row['name'];
-            $usertable = '"users"';
-            $userconditions = "id='".$row['broker_id']."'";
-            $userconditions = '"'.$userconditions.'"';
-            $userRun = $conn->query("call fetchRecord($usertable,$userconditions,'')");
-            $userData = $userRun->fetch_assoc();
-            $conn->next_result();
-            $sub_array[] = $userData['fname'].' '.$userData['lname'];
+            $sub_array[] = $row['bfname'].' '.$row['blname'];
             if($row['status']==0){
-                $changeStatus="return changeUserStatus('".$row['id']."',1,'dealer')";
+                $changeStatus="return changeUserStatus('".$row['id']."',1,'dealer','".MAIN_URL."/model/userModel.php?action=getTableDataDealer')";
                 $status='<a class="stbtn" href="javascript:void(0)" onClick="'.$changeStatus.'"><label style="color: white;cursor: pointer;" class="badge badge-success">Active</label></a>';
             }else{
-                $changeStatus="return changeUserStatus('".$row['id']."',0,'dealer')";
+                $changeStatus="return changeUserStatus('".$row['id']."',0,'dealer','".MAIN_URL."/model/userModel.php?action=getTableDataDealer')";
                 $status='<a class="stbtn" href="javascript:void(0)" onClick="'.$changeStatus.'"><label style="color: white;cursor: pointer;" class="badge badge-danger">Deactive</label></a>';
             }
             $sub_array[] = $status;
@@ -390,24 +387,26 @@ else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'userData'){
                         if ($conn->query($sql)) {
 
                         if($user_type=='broker'){
-                            $_SESSION['message'] = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> Broker Added Successfully !!</div>';
+                            $response['message'] = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> Broker Added Successfully !!</div>';
+                            $response['fetchTableurl'] =MAIN_URL.'/model/userModel.php?action=getTableDataBroker';
                         }else{
-                            $_SESSION['message'] = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> Dealer Added Successfully !!</div>';
+                            $response['message'] = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> Dealer Added Successfully !!</div>';
+                            $response['fetchTableurl'] =MAIN_URL.'/model/userModel.php?action=getTableDataDealer';
                         }
                         $response['status'] =1;
                         
                         }
                         if ($conn->errno) {
-                            $response['html'] ='<div class="modal-body"><div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Something Went Wrong !!</div></div>';
+                            $response['message'] ='<div class="modal-body"><div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Something Went Wrong !!</div></div>';
                             $response['status'] =0;
                         }
                 }else{
-                    $response['html'] ='<div class="modal-body"><div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Phone Number already exists !!</div></div>';
+                    $response['message'] ='<div class="modal-body"><div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Phone Number already exists !!</div></div>';
                     $response['status'] =0;
                 }
                 
             }else{
-                $response['html'] ='<div class="modal-body"><div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Email address already exists !!</div></div>';
+                $response['message'] ='<div class="modal-body"><div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Email address already exists !!</div></div>';
                 $response['status'] =0;
             }
 
@@ -441,31 +440,33 @@ else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'userData'){
                         if ($conn->query($sql)) {
 
                         if($user_type=='broker'){
-                            $_SESSION['message'] = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> Broker Updated Successfully !!</div>';
+                            $response['message'] = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> Broker Updated Successfully !!</div>';
+                            $response['fetchTableurl'] =MAIN_URL.'/model/userModel.php?action=getTableDataBroker';
                         }else{
-                            $_SESSION['message'] = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> Dealer Updated Successfully !!</div>';
+                            $response['message'] = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> Dealer Updated Successfully !!</div>';
+                            $response['fetchTableurl'] =MAIN_URL.'/model/userModel.php?action=getTableDataDealer';
                         }
                         $response['status'] =1;
                         
                         }
                         if ($conn->errno) {
-                            $response['html'] ='<div class="modal-body"><div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Something Went Wrong !!</div></div>';
+                            $response['message'] ='<div class="modal-body"><div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Something Went Wrong !!</div></div>';
                             $response['status'] =0;
                         }
                 }else{
-                    $response['html'] ='<div class="modal-body"><div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Phone Number already exists !!</div></div>';
+                    $response['message'] ='<div class="modal-body"><div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Phone Number already exists !!</div></div>';
                     $response['status'] =0;
                 }
                 
             }else{
-                $response['html'] ='<div class="modal-body"><div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Email address already exists !!</div></div>';
+                $response['message'] ='<div class="modal-body"><div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Email address already exists !!</div></div>';
                 $response['status'] =0;
             }
 
         }
     }else{
 		//error message
-		$response['html'] ='<div class="modal-body"><div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Something Went Wrong !!</div></div>';
+		$response['message'] ='<div class="modal-body"><div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Something Went Wrong !!</div></div>';
 		$response['status'] =0;
 	}
     echo json_encode($response);
@@ -487,15 +488,15 @@ else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'changeUserStatus')
         }    
 
         if($user_type=='broker'){
-            $_SESSION['message'] = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> Broker '.$alertstatus.' Successfully !!</div>';
+            $response['message'] = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> Broker '.$alertstatus.' Successfully !!</div>';
         }else{
-            $_SESSION['message'] = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> Dealer '.$alertstatus.' Successfully !!</div>';
+            $response['message'] = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> Dealer '.$alertstatus.' Successfully !!</div>';
         }
         $response['status'] =1;
         
         }
         if ($conn->errno) {
-            $response['html'] ='<div class="modal-body"><div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Something Went Wrong !!</div></div>';
+            $response['message'] ='<div class="modal-body"><div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Something Went Wrong !!</div></div>';
             $response['status'] =0;
         }
 
@@ -503,7 +504,7 @@ else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'changeUserStatus')
     }
     else{
 		//error message
-		$response['html'] ='<div class="modal-body"><div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Something Went Wrong !!</div></div>';
+		$response['message'] ='<div class="modal-body"><div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Something Went Wrong !!</div></div>';
 		$response['status'] =0;
 	}
     echo json_encode($response);
