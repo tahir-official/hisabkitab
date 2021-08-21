@@ -62,7 +62,7 @@
 
 $(document).ready(function(){
 	
-	tableLoad(baseUrl +"/model/userModel.php?action=getTableDataDealer");
+	tableLoad(baseUrl +"/model/userModel.php?action=getTableDataDealer",null);
 
 });	
 

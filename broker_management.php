@@ -61,7 +61,7 @@
 
 $(document).ready(function(){
 	
-	tableLoad(baseUrl +"/model/userModel.php?action=getTableDataBroker");
+	tableLoad(baseUrl +"/model/userModel.php?action=getTableDataBroker",null);
 
 });	
 

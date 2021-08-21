@@ -26,6 +26,9 @@ class Functions
 		return $newDate = date("d M,Y", strtotime($dateiteam)); 
 		 
 	}
+	function paymentmode(){
+		return $paymentmode = array("Cash"=>"cash", "NEFT"=>"neft","Bank Transfer"=>"bank_transfer","PhonePay"=>"phonepay","Gpay"=>"gpay");
+	}
 	
     function encrypt_decrypt($string, $action)
 	{

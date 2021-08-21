@@ -1,5 +1,44 @@
 <?php
    include_once('include/header.php');
+   if(!isset($_REQUEST['bill_id']) || $_REQUEST['bill_id']==''){$commonFunction->redirect(MAIN_URL.'/all_bills.php'); }
+    $billtable = '"bills"';
+    $billconditions = "bill_id='".$_REQUEST['bill_id']."' and  store_id='".$store_id."' ";
+    $billconditions = '"'.$billconditions.'"';
+    $billRun = $conn->query("call fetchRecord($billtable,$billconditions,'')");
+    $conn->next_result();
+    if($billRun->num_rows <= 0)
+    {
+        $commonFunction->redirect(MAIN_URL.'/all_bills.php');
+    }else{
+        $billData = $billRun->fetch_assoc();
+    }
+
+    
+    $billtable = '"bills"';
+    $billconditions = "bill_id = '".$_REQUEST['bill_id']."' and store_id='".$store_id."'";
+    $billconditions = '"'.$billconditions.'"';
+    $billRun = $conn->query("call fetchRecord($billtable,$billconditions,'')");
+    $conn->next_result();
+    $billData = $billRun->fetch_assoc();
+    $totalBillamount= $billData['bill_amount'];
+ 
+   $billiteamtable = '"bill_item"';
+   $billiteamconditions = "bill_id = '".$_REQUEST['bill_id']."' ";
+   $billiteamconditions = '"'.$billiteamconditions.'"';
+   $billiteamRun = $conn->query("call fetchRecord($billiteamtable,$billiteamconditions,'')");
+   $conn->next_result();
+   $billiteamData = $billiteamRun->fetch_all(MYSQLI_ASSOC);
+   $totalBilliteamamount=0;
+   foreach($billiteamData as $billiteamrow){
+         $totalBilliteamamount +=$billiteamrow['paid_amount'] ;
+   }
+   $totalBilliteamamount = $totalBilliteamamount;
+   $duaAmount= $totalBillamount - $totalBilliteamamount;
+
+   $billiteampaidper=($totalBilliteamamount/$totalBillamount) * 100;
+   $billiteamdueper=($duaAmount/$totalBillamount) * 100;
+      
+    
    ?>
 <div class="container-fluid page-body-wrapper">
 <?php
@@ -29,7 +68,7 @@
   from {transform:scale(0)}
   to {transform:scale(1)}
 }
-.close {
+.myclose {
    position: absolute;
 top: 68px;
 right: 480px;
@@ -42,8 +81,8 @@ border-radius: 15px;
 border: 1px #3956f0 solid;
 }
 
-.close:hover,
-.close:focus {
+.myclose:hover,
+.myclose:focus {
   color: red;
   text-decoration: none;
   cursor: pointer;
@@ -65,7 +104,12 @@ border: 1px #3956f0 solid;
    <div class="row page-title-header">
       <div class="col-12">
          <div class="page-header">
-            <h4 class="page-title">Bills Management</h4> <a href="<?=MAIN_URL?>/add_bill.php"><button type="button"   class="btn btn-primary toolbar-item">Add Bill</button></a>
+            <h4 class="page-title">Paid History Management</h4> <?php if($billData['status']==0){
+               ?>
+               <button type="button"   class="btn btn-primary toolbar-item" onclick="return loadPopupBillIteam(<?=$_REQUEST['bill_id']?>,0);">Add Paid History</button>
+               <?php
+            }?> 
+            
             <div class="quick-link-wrapper w-100 d-md-flex flex-md-wrap">
                <ul class="quick-links ml-auto">
                   <li><a href="<?=MAIN_URL?>">Home</a></li>
@@ -76,6 +120,44 @@ border: 1px #3956f0 solid;
       </div>
       
    </div>
+  
+   <div class="row page-title-header">
+                        <div class="col-md-4">
+                           <div class="d-flex align-items-center pb-2">
+                              <div class="dot-indicator bg-info mr-2"></div>
+                                <p class="mb-0">Total Amount</p>
+                              
+                           </div>
+                                                      <h4 class="font-weight-semibold"><?=CURRENCY.number_format((float)$totalBillamount, 2, '.', '')?></h4>
+                           <div class="progress progress-md">
+                              <div class="progress-bar bg-info" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                           </div>
+                        </div>
+                        <div class="col-md-4 mt-4 mt-md-0">
+                           <div class="d-flex align-items-center pb-2">
+                              <div class="dot-indicator bg-success mr-2"></div>
+                              
+                                 <p class="mb-0">Total Paid Amount</p>
+                              
+                           </div>
+                                                      <h4 class="font-weight-semibold"><?=CURRENCY.number_format((float)$totalBilliteamamount, 2, '.', '')?></h4>
+                           <div class="progress progress-md">
+                              <div class="progress-bar bg-success" role="progressbar" style="width: <?=round($billiteampaidper);?>%" aria-valuenow="<?=round($billiteampaidper);?>" aria-valuemin="0" aria-valuemax="<?=round($billiteampaidper);?>"></div>
+                           </div>
+                        </div>
+                        <div class="col-md-4 mt-4 mt-md-0">
+                           <div class="d-flex align-items-center pb-2">
+                              <div class="dot-indicator bg-danger mr-2"></div>
+                              
+                                 <p class="mb-0">Total Due Amount</p>
+                              
+                           </div>
+                                                      <h4 class="font-weight-semibold"><?=CURRENCY.number_format((float)$duaAmount, 2, '.', '')?></h4>
+                           <div class="progress progress-md">
+                              <div class="progress-bar bg-danger" role="progressbar" style="width: <?=round($billiteamdueper);?>%" aria-valuenow="<?=round($billiteamdueper);?>" aria-valuemin="0" aria-valuemax="<?=round($billiteamdueper);?>"></div>
+                           </div>
+                        </div>
+                     </div>
    <div id="alert">
    </div>
    <?php
@@ -123,13 +205,14 @@ border: 1px #3956f0 solid;
 <?php
    include_once('include/footer.php');
 ?>
+<script src="<?=MAIN_URL?>/assets/js/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous"></script>
 <script type="text/javascript" language="javascript">
-
-$(document).ready(function(){
 	
-	tableLoad(baseUrl +"/model/billModel.php?action=getTableDataBill");
+$(document).ready(function () {
+      var bill_id='<?=$_REQUEST['bill_id']?>';
+      tableLoad(baseUrl +"/model/billModel.php?action=getTableDataBillIteam",bill_id);
 
-});	
+});
 // Get the modal
 var modal = document.getElementById("myModal");
 function abcd(id){

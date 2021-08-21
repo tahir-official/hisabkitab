@@ -32,7 +32,7 @@
 .myclose {
    position: absolute;
 top: 68px;
-right: 480px;
+right: 377px;
 color: white;
 font-size: 40px;
 font-weight: bold;
@@ -127,12 +127,12 @@ border: 1px #3956f0 solid;
 
 $(document).ready(function(){
 	
-	tableLoad(baseUrl +"/model/billModel.php?action=getTableDataBill");
+	tableLoad(baseUrl +"/model/billModel.php?action=getTableDataBill",null);
 
 });	
 // Get the modal
 var modal = document.getElementById("myModal");
-function abcd(id){
+function previeallimage(id){
 var img = document.getElementById("myImg"+id);
 var modalImg = document.getElementById("img01");
 var captionText = document.getElementById("caption");

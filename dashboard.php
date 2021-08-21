@@ -1,10 +1,31 @@
 <?php
    include_once('include/header.php');
-   ?>
+?>
 <div class="container-fluid page-body-wrapper">
 <?php
    include_once('include/sidebar.php');
-   ?>
+   $billtable = '"bills"';
+   $billconditions = "store_id='".$store_id."'";
+   $billconditions = '"'.$billconditions.'"';
+   $billRun = $conn->query("call fetchRecord($billtable,$billconditions,'')");
+   $conn->next_result();
+   $billData = $billRun->fetch_all(MYSQLI_ASSOC);
+   $totalBillamount= 0;
+   $allids= '';
+   foreach($billData as $billrow){
+      $totalBillamount +=$billrow['bill_amount'] ;
+      $allids .= $billrow['bill_id'].',';
+   }
+   $allids=rtrim($allids, ',');;
+   $totalBillamount = $totalBillamount;
+
+   $query_all_billiteam_amount = "SELECT sum(paid_amount) as total_billiteam_amount FROM bill_item where FIND_IN_SET(bill_id,'".$allids."') ";
+   $statement_all_billiteam_amount = $conn->query($query_all_billiteam_amount);
+   $statement_all_billiteam_amount_data= $statement_all_billiteam_amount->fetch_assoc();
+   $totalpaidamount=$statement_all_billiteam_amount_data['total_billiteam_amount'];
+   $totaldueamount=$totalBillamount-$totalpaidamount;
+
+?>
 <!-- partial -->
 <div class="main-panel">
 <div class="content-wrapper">
@@ -27,14 +48,9 @@
                   <div class="card-body pb-0">
                      <div class="d-flex justify-content-between">
                         <h4 class="card-title mb-0">Total Bill Amount</h4>
-                        <?php
-                           $query_all_bill_amount = "SELECT sum(bill_amount) as total_bill_amount FROM bills where  store_id  = $store_id ";
-                           $statement_all_bill_amount = $conn->query($query_all_bill_amount);
-                           $statement_all_bill_amount_data= $statement_all_bill_amount->fetch_assoc();
-                           
-                           ?>
+                        
                      </div>
-                     <h3 class="font-weight-medium mb-4"><?=CURRENCY.number_format((float)$statement_all_bill_amount_data['total_bill_amount'], 2, '.', '')?></h3>
+                     <h3 class="font-weight-medium mb-4"><?=CURRENCY.number_format((float)$totalBillamount, 2, '.', '')?></h3>
                   </div>
                   <canvas class="mt-n4" height="90" id="total-revenue">
                   </canva>
@@ -46,7 +62,7 @@
                      <div class="d-flex justify-content-between">
                         <h4 class="card-title mb-0" style="color: white;">Total Paid Amount</h4>
                      </div>
-                     <h3 class="font-weight-medium"><?=CURRENCY?>147.7</h3>
+                     <h3 class="font-weight-medium"><?=CURRENCY.number_format((float)$totalpaidamount, 2, '.', '')?></h3>
                   </div>
                   <canvas class="mt-n3" height="90" id="total-transaction1">
                   </canva>
@@ -58,7 +74,7 @@
                      <div class="d-flex justify-content-between">
                         <h4 class="card-title mb-0">Total Due Amount</h4>
                      </div>
-                     <h3 class="font-weight-medium"><?=CURRENCY?>147.7</h3>
+                     <h3 class="font-weight-medium"><?=CURRENCY.number_format((float)$totaldueamount, 2, '.', '')?></h3>
                   </div>
                   <canvas class="mt-n2" height="90" id="total-transaction2">
                   </canva>

@@ -165,7 +165,7 @@ function updatePassword(){
 }
 /*update password script end*/
 
-/*loadmodel script start*/
+/*load user model script start*/
 function loadPopupUser(user_type,data_id){
     $.ajax({
         method: "POST",
@@ -194,7 +194,7 @@ function loadPopupUser(user_type,data_id){
     
     return false;
 }
-/*loadmodel script end*/
+/*load user model script end*/
 
 /*city script start*/
 function loadCity(state_id,set_id){
@@ -226,7 +226,7 @@ function loadCity(state_id,set_id){
 
 /*city script start*/
 
-function tableLoad(loadurl){
+function tableLoad(loadurl,other){
 
   var dataTable = $('#mytable').DataTable({
    "processing" : true,
@@ -249,7 +249,7 @@ function tableLoad(loadurl){
 }
 
 $(document).ready(function () {
-
+      /*start user form*/
       $('#userForm').validate({ 
         
         rules: {
@@ -309,7 +309,7 @@ $(document).ready(function () {
             }else{
               $('#form-dialog').modal('hide');
               $('#mytable').DataTable().destroy();
-              tableLoad(response.fetchTableurl);
+              tableLoad(response.fetchTableurl,null);
               $("#alert").html(response.message);
               $("#alert").show();
 
@@ -323,6 +323,76 @@ $(document).ready(function () {
               return false; 
           }
       });
+      /*end user form*/
+      /*start add paid iteam*/
+
+      $('#AddbillIteamForm').validate({ 
+    
+        rules: {
+        paid_amount: {
+        required : true,
+        number: true
+        },
+        payment_mode: {
+        required : true
+        },
+        paid_date: {
+        required: true,
+        
+        },
+        paid_image: {
+        required : true,
+        
+        },
+        
+        },
+        submitHandler: function (form) { 
+        var formData = new FormData($('#AddbillIteamForm')[0]);
+        $.ajax({
+            method: "POST",
+            url: baseUrl + "/model/billModel.php?action=paidIteamManage",
+            data: formData,
+            dataType: 'JSON',
+            cache:false,
+            contentType: false,
+            processData: false,
+            beforeSend: function() {
+            $(".btnSubmit").html('<i class="fa fa-spinner"></i> Processing...');
+            $(".btnSubmit").prop('disabled', true);
+            $("#popupalert").hide();
+            $("#alert").hide();
+            
+                
+            }
+        })
+    
+        .fail(function(response) {
+            alert( "Try again later." );
+        })
+    
+        .done(function(response) {
+           if(response.status==0){
+              $("#popupalert").show();
+              $("#popupalert").html(response.message);
+              $(".btnSubmit").html('Add');
+              $(".btnSubmit").prop('disabled', false);
+           }else{
+              
+            $('#form-dialog').modal('hide');
+            //$('#mytable').DataTable().destroy();
+            //tableLoad(response.fetchTableurl);
+            $("#alert").show();
+            $("#alert").html(response.message);
+           }
+        })
+        .always(function() {
+           $(".btnSubmit").html('Add');
+           $(".btnSubmit").prop('disabled', false);
+        });
+            return false; 
+        }
+    });
+    /*end add paid iteam*/
   
   });
 
@@ -354,7 +424,7 @@ $(document).ready(function () {
           }else{
             $('#form-dialog').modal('hide');
             $('#mytable').DataTable().destroy();
-            tableLoad(fetchTableurl);
+            tableLoad(fetchTableurl,null);
             
           }
           $("#alert").html(response.message);
@@ -372,5 +442,80 @@ $(document).ready(function () {
       }
      
   }
+
+  function changeBillStatus(bill_id){
+    var alertmessage='Are you sure you want to mark as completed ?';
+    if(confirm(alertmessage)){
+          $.ajax({
+            method: "POST",
+            url: baseUrl + "/model/billModel.php?action=changeBillStatus",
+            data: {bill_id:bill_id},
+            dataType: 'JSON',
+            beforeSend: function() {
+               $('.stbtn').attr("disabled",true);
+               $("#alert").hide();
+             }
+        })
+
+        .fail(function(response) {
+            alert( "Try again later." );
+        })
+
+        .done(function(response) {
+          if(response.status==0){
+            $('.stbtn').attr("disabled",false);
+          }else{
+            $('#form-dialog').modal('hide');
+            $('#mytable').DataTable().destroy();
+            tableLoad(response.fetchTableurl,null);
+            
+          }
+          $("#alert").html(response.message);
+          $("#alert").show();
+            
+        })
+
+        .always(function() {
+          $('.stbtn').attr("disabled",false);
+         });
+       
+      }
+      else{
+          return false;
+      }
+     
+  }
+
+  /*load bill iteam model script start*/
+function loadPopupBillIteam(bill_id,paid_id){
+  $.ajax({
+      method: "POST",
+      url: baseUrl + "/model/billModel.php?action=loadPopupBillIteam",
+      data: {bill_id:bill_id,paid_id:paid_id},
+      dataType: 'JSON',
+      beforeSend: function() {
+        $("#popupcontent").html('<div id="loader"></div>');
+        
+      }
+  })
+
+  .fail(function(response) {
+      alert( "Try again later." );
+  })
+
+  .done(function(response) {
+    $.getScript(baseUrl+"/assets/js/custom.js");
+    $("#popupcontent").html(response.html);
+    $('.number_input').mask('00000.00', { reverse: true });
+    
+      
+  })
+  .always(function() {
+    $('#form-dialog').modal('toggle');
+  });
+  
+  return false;
+}
+/*load bill iteam model script end*/
 
   
