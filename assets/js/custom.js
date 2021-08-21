@@ -226,7 +226,7 @@ function loadCity(state_id,set_id){
 
 /*city script start*/
 
-function tableLoad(loadurl,other){
+function tableLoad(loadurl,other_id){
 
   var dataTable = $('#mytable').DataTable({
    "processing" : true,
@@ -234,7 +234,10 @@ function tableLoad(loadurl,other){
    "order" : [],
    "ajax" : {
      url:loadurl,
-     type:"POST"
+     type:"POST",
+     data: {
+      other_id: other_id
+     }
    },
    'columnDefs': [ {
 
@@ -379,10 +382,12 @@ $(document).ready(function () {
            }else{
               
             $('#form-dialog').modal('hide');
-            //$('#mytable').DataTable().destroy();
-            //tableLoad(response.fetchTableurl);
+            $('#mytable').DataTable().destroy();
+            tableLoad(response.fetchTableurl,response.other_id);
             $("#alert").show();
             $("#alert").html(response.message);
+            $("#paidid").html(response.paid_amount);
+            $("#dueid").html(response.due_amount);
            }
         })
         .always(function() {
@@ -393,6 +398,74 @@ $(document).ready(function () {
         }
     });
     /*end add paid iteam*/
+
+
+    /*start update paid iteam*/
+
+    $('#updatebillIteamForm').validate({ 
+    
+      rules: {
+      paid_amount: {
+      required : true,
+      number: true
+      },
+      payment_mode: {
+      required : true
+      },
+      paid_date: {
+      required: true,
+      
+      },
+      },
+      submitHandler: function (form) { 
+      var formData = new FormData($('#updatebillIteamForm')[0]);
+      $.ajax({
+          method: "POST",
+          url: baseUrl + "/model/billModel.php?action=paidIteamManage",
+          data: formData,
+          dataType: 'JSON',
+          cache:false,
+          contentType: false,
+          processData: false,
+          beforeSend: function() {
+          $(".btnSubmit").html('<i class="fa fa-spinner"></i> Processing...');
+          $(".btnSubmit").prop('disabled', true);
+          $("#popupalert").hide();
+          $("#alert").hide();
+          
+              
+          }
+      })
+  
+      .fail(function(response) {
+          alert( "Try again later." );
+      })
+  
+      .done(function(response) {
+         if(response.status==0){
+            $("#popupalert").show();
+            $("#popupalert").html(response.message);
+            $(".btnSubmit").html('Update');
+            $(".btnSubmit").prop('disabled', false);
+         }else{
+            
+          $('#form-dialog').modal('hide');
+          $('#mytable').DataTable().destroy();
+          tableLoad(response.fetchTableurl,response.other_id);
+          $("#alert").show();
+          $("#alert").html(response.message);
+          $("#paidid").html(response.paid_amount);
+            $("#dueid").html(response.due_amount);
+         }
+      })
+      .always(function() {
+         $(".btnSubmit").html('Update');
+         $(".btnSubmit").prop('disabled', false);
+      });
+          return false; 
+      }
+  });
+  /*end update paid iteam*/
   
   });
 

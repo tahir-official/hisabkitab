@@ -128,7 +128,7 @@ border: 1px #3956f0 solid;
                                 <p class="mb-0">Total Amount</p>
                               
                            </div>
-                                                      <h4 class="font-weight-semibold"><?=CURRENCY.number_format((float)$totalBillamount, 2, '.', '')?></h4>
+                           <h4 class="font-weight-semibold"><?=CURRENCY.number_format((float)$totalBillamount, 2, '.', '')?></h4>
                            <div class="progress progress-md">
                               <div class="progress-bar bg-info" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                            </div>
@@ -140,7 +140,7 @@ border: 1px #3956f0 solid;
                                  <p class="mb-0">Total Paid Amount</p>
                               
                            </div>
-                                                      <h4 class="font-weight-semibold"><?=CURRENCY.number_format((float)$totalBilliteamamount, 2, '.', '')?></h4>
+                           <h4 class="font-weight-semibold" id="paidid"><?=CURRENCY.number_format((float)$totalBilliteamamount, 2, '.', '')?></h4>
                            <div class="progress progress-md">
                               <div class="progress-bar bg-success" role="progressbar" style="width: <?=round($billiteampaidper);?>%" aria-valuenow="<?=round($billiteampaidper);?>" aria-valuemin="0" aria-valuemax="<?=round($billiteampaidper);?>"></div>
                            </div>
@@ -152,7 +152,7 @@ border: 1px #3956f0 solid;
                                  <p class="mb-0">Total Due Amount</p>
                               
                            </div>
-                                                      <h4 class="font-weight-semibold"><?=CURRENCY.number_format((float)$duaAmount, 2, '.', '')?></h4>
+                           <h4 class="font-weight-semibold" id="dueid"><?=CURRENCY.number_format((float)$duaAmount, 2, '.', '')?></h4>
                            <div class="progress progress-md">
                               <div class="progress-bar bg-danger" role="progressbar" style="width: <?=round($billiteamdueper);?>%" aria-valuenow="<?=round($billiteamdueper);?>" aria-valuemin="0" aria-valuemax="<?=round($billiteamdueper);?>"></div>
                            </div>
@@ -169,17 +169,11 @@ border: 1px #3956f0 solid;
         <thead>
             <tr>
                 <th>S.N.</th>
-                <th>Bill Image</th>
-                <th>Bill ID</th>
-                <th>Bill Number</th>
-                <th>Dealer Name</th>
-                <th>Broker Name</th>
-                <th>Bill Amount</th>
-                <th>Bill Paid Amount</th>
-                <th>Bill Due Amount</th>
-                <th>Bill Date</th>
-                <th>Created Date</th>
-                <th>Status</th>
+                <th>Paid Image</th>
+                <th>Paid Amount</th>
+                <th>Payment Mode</th>
+                <th>Paid Date</th>
+                <th>Paid Remark</th>
                 <th>Action</th>
                
             </tr>
@@ -194,7 +188,7 @@ border: 1px #3956f0 solid;
 <!-- The Modal -->
 <div id="myModal" class="modal mymodal">
    
-<span class="close">&times;</span>
+<span class="close myclose">&times;</span>
 
   
   <img class="modal-content mymodal-content" id="img01">
@@ -215,7 +209,7 @@ $(document).ready(function () {
 });
 // Get the modal
 var modal = document.getElementById("myModal");
-function abcd(id){
+function previeallimage(id){
 var img = document.getElementById("myImg"+id);
 var modalImg = document.getElementById("img01");
 var captionText = document.getElementById("caption");
