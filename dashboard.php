@@ -178,5 +178,11 @@
 <!-- content-wrapper ends -->
 <?php
    include_once('include/footer.php');
-   ?>
+?>
+<script>
+   $(document).ready(function () {
+  var currentyear = new Date().getFullYear();
+  loadmychart(currentyear);
+  });
+</script>
 

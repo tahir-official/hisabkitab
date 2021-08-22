@@ -367,10 +367,7 @@ function createchart(paid,due){
   }
 }
 $(document).ready(function () {
-  var currentyear = new Date().getFullYear();
-  loadmychart(currentyear);
-  
-      /*start user form*/
+  /*start user form*/
       $('#userForm').validate({ 
         
         rules: {

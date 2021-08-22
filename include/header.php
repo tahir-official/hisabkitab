@@ -34,6 +34,13 @@
                background: url('<?=MAIN_URL?>/assets/images/loader.gif') no-repeat center;
                z-index: 999;
          }
+         .fixed-top {
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            z-index: 1030;
+        }
       </style>
    </head>
    <body>
