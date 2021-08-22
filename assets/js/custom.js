@@ -251,7 +251,125 @@ function tableLoad(loadurl,other_id){
 
 }
 
+function loadmychart(currentyear){
+  $.ajax({
+    method: "POST",
+    url: baseUrl + "/model/basicModel.php?action=getChart",
+    data: {currentyear:currentyear},
+    dataType: 'JSON',
+    beforeSend: function() {
+      $("#balance-chart-legend").html('Please wait...');
+      
+    }
+  })
+
+  .fail(function(response) {
+      alert( "Try again later." );
+  })
+
+  .done(function(response) {
+    createchart(response.total_paid_year_array,response.total_due_year_array);
+      
+  })
+
+  
+}
+function createchart(paid,due){
+  if ($("#balance-chart").length) {
+    var chartData = {
+      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July','August','September','October','November','December'],
+      datasets: [{
+        type: 'bar',
+        label: 'Paid Amount',
+        data: paid,
+        backgroundColor: ChartColor[1],
+        borderColor: ChartColor[1],
+        borderWidth: 2
+      }, {
+        type: 'bar',
+        label: 'Due Amount',
+        data: due,
+        backgroundColor: ChartColor[2],
+        borderColor: ChartColor[2]
+      }]
+    };
+    var MixedChartCanvas = document.getElementById('balance-chart').getContext('2d');
+    lineChart = new Chart(MixedChartCanvas, {
+      type: 'bar',
+      data: chartData,
+      options: {
+        responsive: true,
+        title: {
+          display: true,
+          text: 'Balance Chart'
+        },
+        scales: {
+          xAxes: [{
+            display: true,
+            ticks: {
+              fontColor: '#212229',
+              stepSize: 50,
+              min: 0,
+              max: 150,
+              autoSkip: true,
+              autoSkipPadding: 15,
+              maxRotation: 0,
+              maxTicksLimit: 10
+            },
+            gridLines: {
+              display: false,
+              drawBorder: false,
+              color: 'transparent',
+              zeroLineColor: '#eeeeee'
+            }
+          }],
+          yAxes: [{
+            display: true,
+            scaleLabel: {
+              display: true,
+              labelString: 'Amount',
+              fontSize: 12,
+              lineHeight: 2
+            },
+            ticks: {
+              fontColor: '#212229',
+              display: true,
+              autoSkip: false,
+              maxRotation: 0,
+              stepSize: 10000,
+              min: 0,
+              max: 100000
+            },
+            gridLines: {
+              drawBorder: false
+            }
+          }]
+        },
+        legend: {
+          display: false
+        },
+        legendCallback: function (chart) {
+          var text = [];
+          text.push('<div class="chartjs-legend d-flex justify-content-center mt-4"><ul>');
+          for (var i = 0; i < chart.data.datasets.length; i++) {
+            console.log(chart.data.datasets[i]); // see what's inside the obj.
+            text.push('<li>');
+            text.push('<span style="background-color:' + chart.data.datasets[i].borderColor + '">' + '</span>');
+            text.push(chart.data.datasets[i].label);
+            text.push('</li>');
+          }
+          text.push('</ul></div>');
+          return text.join("");
+        }
+      }
+    });
+    document.getElementById('balance-chart-legend').innerHTML = lineChart.generateLegend();
+  }
+}
 $(document).ready(function () {
+  var currentyear = new Date().getFullYear();
+  loadmychart(currentyear);
+  
       /*start user form*/
       $('#userForm').validate({ 
         

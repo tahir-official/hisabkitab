@@ -83,11 +83,21 @@
             <div class="col-md-12 grid-margin">
                 <div class="card">
                   <div class="p-4 border-bottom bg-light">
-                    <h4 class="card-title mb-0">Mixed Chart</h4>
+                    <h4 class="card-title mb-0">Balance Chart</h4>
+                    <select name="currentyear" onchange="loadmychart(this.value)" style="float: right;margin-top: -19px;">
+                      
+                       <?php 
+                           for($i = 2010 ; $i <= date('Y'); $i++){
+                              ?>
+                              <option <?php if($i==date('Y')){echo 'selected';}?> value="<?=$i?>"><?=$i?></option>
+                              <?php
+                           }
+                        ?>
+                    </select>
                   </div>
                   <div class="card-body">
-                    <canvas id="mixed-chart" height="100"></canvas>
-                    <div class="mr-5" id="mixed-chart-legend"></div>
+                    <canvas id="balance-chart" height="100"></canvas>
+                    <div class="mr-5" id="balance-chart-legend"></div>
                   </div>
                 </div>
               </div>
