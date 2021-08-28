@@ -52,7 +52,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                           <label for="bill_number">Bill Number</label>
+                           <label for="bill_number">Bill (Invoice) Number</label>
                            <input type="text" class="form-control" name="bill_number" id="bill_number" placeholder="Enter Bill Number" value=""  >
                         </div>
                         <div class="form-group">
@@ -101,7 +101,7 @@
 <script src="<?=MAIN_URL?>/assets/js/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous"></script>
 <script>
     $(document).ready(function () {
-       $('.number_input').mask('00000.00', { reverse: true });
+       $('.number_input').mask('000000000000000000.00', { reverse: true });
 
             $('#addBill').validate({ 
     
@@ -120,10 +120,7 @@
             required : true,
             },
             
-            bill_image: {
-            required : true,
             
-            },
             
             },
             submitHandler: function (form) { 

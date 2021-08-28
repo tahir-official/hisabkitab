@@ -101,8 +101,8 @@
          <div class="row flex-grow">
             <div class="col-12">
                 <?php
-                $imgsrc='';
-                $imgwidht='';
+                $imgsrc=MAIN_URL.'/assets/images/no-image.png';
+                $imgwidht='width:264px;';
                 if($billData['bill_image']!=''){
                     $imgsrc=MAIN_URL.$billData['bill_image'];
                     $imgwidht='width:264px;';
@@ -125,7 +125,7 @@
 <script src="<?=MAIN_URL?>/assets/js/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous"></script>
 <script>
     $(document).ready(function () {
-       $('.number_input').mask('00000.00', { reverse: true });
+       $('.number_input').mask('000000000000000000.00', { reverse: true });
 
             $('#editBill').validate({ 
     

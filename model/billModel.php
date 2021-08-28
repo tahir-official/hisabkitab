@@ -15,19 +15,19 @@ if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'addBill')
         $conn->next_result();
         if($billRun->num_rows <= 0)
         {
-            $uploadImage = false;
+            $fileData= ", `bill_image` = ''";
             if($_FILES["bill_image"]['error'] == 0){
                 $filename = rand(100, 500) .time() .rand(100, 500) ."." .ltrim(strstr($_FILES['bill_image']['name'], '.'), '.');
                 $target_file = "../assets/images/bill_image/" .$filename;
                 if(move_uploaded_file($_FILES["bill_image"]["tmp_name"], $target_file)){
                     $fileD = '/assets/images/bill_image/' .$filename;
                     $fileData= ", `bill_image` = '" .$fileD ."'"; 
-                    $uploadImage = true;
+                    
                 }
                 
                 
             }
-            if($uploadImage){
+            
             $bill_number_auto='BI'.rand(10000,1000000);
             $sql = "insert into bills set bill_number_auto = '".$bill_number_auto."', bill_number = '".$_POST['bill_number']."',
             dealer_id = '".$_POST['dealer_id']."',bill_amount = '".$_POST['bill_amount']."',bill_date = '".$_POST['bill_date']."',
@@ -44,11 +44,7 @@ if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'addBill')
                 $response['status'] =0;
             }
     
-            }else{
-            //error message
-            $response['message'] ='<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Bill image not upload try again !!</div>';
-            $response['status'] =0;   
-            }
+            
         }else{
             
             $response['message'] ='<div class="modal-body"><div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Bill Number already exists, Please Enter different Bill Number !!</div></div>';
@@ -86,7 +82,7 @@ else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'editBill')
                 if(move_uploaded_file($_FILES["bill_image"]["tmp_name"], $target_file)){
                 $fileD = '/assets/images/bill_image/' .$filename;
                 $fileData= ", `bill_image` = '" .$fileD ."'"; 
-                if(file_exists('..'.$_POST['bill_image'])) unlink('..'.$_POST['bill_image']);
+                if(file_exists($_POST['bill_image'])) unlink($_POST['bill_image']);
                     
                 }
                 
@@ -176,7 +172,12 @@ else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'getTableDataBill')
         {
             $sub_array = array();
             $sub_array[] = $i;
-            $sub_array[] = '<img onclick="previeallimage('.$row['bill_id'].')" id="myImg'.$row['bill_id'].'" alt="Snow" style="width: 100px;height: 100px;" src="'.MAIN_URL.$row['bill_image'].'">';
+            if($row['bill_image']!=''){
+                $billimage=MAIN_URL.$row['bill_image'];
+            }else{
+                $billimage=MAIN_URL.'/assets/images/no-image.png';
+            }
+            $sub_array[] = '<img onclick="previeallimage('.$row['bill_id'].')" id="myImg'.$row['bill_id'].'" alt="Snow" style="width: 100px;height: 100px;" src="'.$billimage.'">';
             $sub_array[] = $row['bill_number_auto'];
             $sub_array[] = $row['bill_number'];
             $sub_array[] = $row['fname'].' '.$row['lname'];
@@ -287,7 +288,12 @@ else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'getTableDataBillIt
         {
             $sub_array = array();
             $sub_array[] = $i;
-            $sub_array[] = '<img onclick="previeallimage('.$row['item_id'].')" id="myImg'.$row['item_id'].'" alt="Snow" style="width: 100px;height: 100px;" src="'.MAIN_URL.$row['paid_image'].'">';
+            if($row['paid_image']!=''){
+                $billimage=MAIN_URL.$row['paid_image'];
+            }else{
+                $billimage=MAIN_URL.'/assets/images/no-image.png';
+            }
+            $sub_array[] = '<img onclick="previeallimage('.$row['item_id'].')" id="myImg'.$row['item_id'].'" alt="Snow" style="width: 100px;height: 100px;" src="'.$billimage.'">';
             $sub_array[] = '<span style="color: green;">'.CURRENCY.number_format((float)$row['paid_amount'], 2, '.', '').'</span>';
             $sub_array[] = str_replace('_',' ',ucwords($row['payment_mode'],'_'));
             $sub_array[] = $commonFunction->dateFormat($row['paid_date']);
@@ -391,9 +397,14 @@ else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'loadPopupBillIteam
             $paid_amount=$billiteamData['paid_amount'];
             $paid_date = $billiteamData['paid_date'];
             $paid_remark=$billiteamData['paid_remark'];
+            if($billiteamData['paid_image']!=''){
+                $bill_image=MAIN_URL.$billiteamData['paid_image'];
+            }else{
+                $bill_image=MAIN_URL.'/assets/images/no-image.png';
+            }
             $imagedata='<div class="form-group pmd-textfield pmd-textfield-floating-label">
             <label for="paid_image">Preview</label>
-            <img style="width: 100px;height: 100px;border: 1px solid;" src="'.MAIN_URL.$billiteamData['paid_image'].'" >
+            <img style="width: 100px;height: 100px;border: 1px solid;" src="'.$bill_image.'" >
             </div>';
             $imagepreview='<input  name="paid_image_preview" value="'.$billiteamData['paid_image'].'" class="form-control" type="hidden" >';
          }
@@ -486,19 +497,19 @@ else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'paidIteamManage')
 
             $duaAmount= $totalBillamount - $totalBilliteamamount;
             if($_POST['paid_amount'] <= $duaAmount){
-                $uploadImage = false;
-                if($_FILES["paid_image"]['error'] == 0){
-                    $filename = rand(100, 500) .time() .rand(100, 500) ."." .ltrim(strstr($_FILES['paid_image']['name'], '.'), '.');
-                    $target_file = "../assets/images/paid_image/" .$filename;
-                    if(move_uploaded_file($_FILES["paid_image"]["tmp_name"], $target_file)){
-                        $fileD = '/assets/images/paid_image/' .$filename;
-                        $fileData= ", `paid_image` = '" .$fileD ."'"; 
-                        $uploadImage = true;
+                    $fileData= ", `paid_image` = ''";
+                    if($_FILES["paid_image"]['error'] == 0){
+                        $filename = rand(100, 500) .time() .rand(100, 500) ."." .ltrim(strstr($_FILES['paid_image']['name'], '.'), '.');
+                        $target_file = "../assets/images/paid_image/" .$filename;
+                        if(move_uploaded_file($_FILES["paid_image"]["tmp_name"], $target_file)){
+                            $fileD = '/assets/images/paid_image/' .$filename;
+                            $fileData= ", `paid_image` = '" .$fileD ."'"; 
+                            
+                        }
+                        
+                        
                     }
-                    
-                    
-                }
-                if($uploadImage){
+                
                     
                     $sql = "insert into bill_item set bill_id = '".$_POST['bill_id']."', paid_amount = '".$_POST['paid_amount']."',
                     payment_mode = '".$_POST['payment_mode']."',paid_remark = '".htmlentities($_POST['paid_remark'],ENT_QUOTES)."',
@@ -516,11 +527,7 @@ else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'paidIteamManage')
                         $response['message'] ='<div class="modal-body"><div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Something Went Wrong !!</div></div>';
                         $response['status'] =0;
                     }
-                }else{
-                    //error message
-                    $response['message'] ='<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Paid image not upload try again !!</div>';
-                    $response['status'] =0;
-                }
+                
 
             }else{
                 $response['message'] ='<div class="modal-body"><div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> This bill dua amount is '.CURRENCY.$duaAmount.', Please enter amount equal to and less than  '.CURRENCY.$duaAmount.' !!</div></div>';
@@ -551,7 +558,7 @@ else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'paidIteamManage')
                     if(move_uploaded_file($_FILES["paid_image"]["tmp_name"], $target_file)){
                     $fileD = '/assets/images/paid_image/' .$filename;
                     $fileData= ", `paid_image` = '" .$fileD ."'"; 
-                    if(file_exists('..'.$_POST['paid_image_preview'])) unlink('..'.$_POST['paid_image_preview']);
+                    if(file_exists($_POST['paid_image_preview'])) unlink($_POST['paid_image_preview']);
                         
                     }
                     

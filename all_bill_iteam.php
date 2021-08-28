@@ -13,14 +13,15 @@
         $billData = $billRun->fetch_assoc();
     }
 
-    
-    $billtable = '"bills"';
-    $billconditions = "bill_id = '".$_REQUEST['bill_id']."' and store_id='".$store_id."'";
-    $billconditions = '"'.$billconditions.'"';
-    $billRun = $conn->query("call fetchRecord($billtable,$billconditions,'')");
-    $conn->next_result();
-    $billData = $billRun->fetch_assoc();
     $totalBillamount= $billData['bill_amount'];
+    $userstable = '"users"';
+    $userconditions = "id = '".$billData['dealer_id']."'";
+    $userconditions = '"'.$userconditions.'"';
+    $userRun = $conn->query("call fetchRecord($userstable,$userconditions,'')");
+    $conn->next_result();
+    $usersData = $userRun->fetch_assoc();
+    $username= $usersData['fname'].' '.$usersData['lname'];
+    
  
    $billiteamtable = '"bill_item"';
    $billiteamconditions = "bill_id = '".$_REQUEST['bill_id']."' ";
@@ -115,6 +116,15 @@ border: 1px #3956f0 solid;
                   <li><a href="<?=MAIN_URL?>">Home</a></li>
                   <li><a href="<?=$url?>">Bills Management</a>  </li>
                </ul>
+            </div>
+         </div>
+      </div>
+      <div class="col-12">
+         <div class="page-header">
+            <h4 class="page-title">Dealer Name </h4>
+            
+            <div class="quick-link-wrapper w-100 d-md-flex flex-md-wrap">
+            <h4 class="page-title">:<?=$username?></h4>
             </div>
          </div>
       </div>

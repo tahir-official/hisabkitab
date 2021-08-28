@@ -378,10 +378,7 @@ $(document).ready(function () {
         lname: {
           required : true
         },
-        email_address: {
-            required: true,
-            email: true
-        },
+        
         c_number: {
           required : true,
           number: true
@@ -458,10 +455,7 @@ $(document).ready(function () {
         required: true,
         
         },
-        paid_image: {
-        required : true,
         
-        },
         
         },
         submitHandler: function (form) { 
@@ -694,7 +688,7 @@ function loadPopupBillIteam(bill_id,paid_id){
   .done(function(response) {
     $.getScript(baseUrl+"/assets/js/custom.js");
     $("#popupcontent").html(response.html);
-    $('.number_input').mask('00000.00', { reverse: true });
+    $('.number_input').mask('000000000000000000.00', { reverse: true });
     
       
   })

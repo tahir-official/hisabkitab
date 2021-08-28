@@ -353,13 +353,23 @@ else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'userData'){
         $store_id=$_SESSION['store_id'];
         
         if($user_id==0){
+            $email_condition=true;
+            if($_POST['email_address']!=''){
+                $userstable = '"users"';
+                $usersconditions = "email_address='".$_POST['email_address']."' and user_type='".$user_type."'  and store_id='".$store_id."' ";
+                $usersconditions = '"'.$usersconditions.'"';
+                $usersRun = $conn->query("call fetchRecord($userstable,$usersconditions,'')");
+                $conn->next_result();
+                if($usersRun->num_rows <= 0)
+		        {
+                    $email_condition=true;
+                }else{
+                    $email_condition=false;
+                }
 
-            $userstable = '"users"';
-            $usersconditions = "email_address='".$_POST['email_address']."' and user_type='".$user_type."'  and store_id='".$store_id."' ";
-            $usersconditions = '"'.$usersconditions.'"';
-            $usersRun = $conn->query("call fetchRecord($userstable,$usersconditions,'')");
-            $conn->next_result();
-            if($usersRun->num_rows <= 0)
+            }
+            
+            if($email_condition)
 		    {
                 
                 $userstable2 = '"users"';
@@ -414,12 +424,24 @@ else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'userData'){
             
         }else{
 
-            $userstable = '"users"';
-            $usersconditions = "email_address='".$_POST['email_address']."' and user_type='".$user_type."' and store_id='".$store_id."' and id != '".$user_id."' ";
-            $usersconditions = '"'.$usersconditions.'"';
-            $usersRun = $conn->query("call fetchRecord($userstable,$usersconditions,'')");
-            $conn->next_result();
-            if($usersRun->num_rows <= 0)
+            $email_condition=true;
+            if($_POST['email_address']!=''){
+                $userstable = '"users"';
+                $usersconditions = "email_address='".$_POST['email_address']."' and user_type='".$user_type."' and store_id='".$store_id."' and id != '".$user_id."' ";
+                $usersconditions = '"'.$usersconditions.'"';
+                $usersRun = $conn->query("call fetchRecord($userstable,$usersconditions,'')");
+                $conn->next_result();
+                if($usersRun->num_rows <= 0)
+		        {
+                    $email_condition=true;
+                }else{
+                    $email_condition=false;
+                }
+
+            }
+            
+            
+            if($email_condition)
 		    {
                 
                 $userstable2 = '"users"';
