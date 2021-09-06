@@ -436,7 +436,7 @@ else if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'loadPopupBillIteam
                                         </div>
                                         <div class="form-group pmd-textfield pmd-textfield-floating-label">
                                             <label for="paid_image">Image</label>
-                                            <input type="file" id="paid_image" name="paid_image" class="mat-input form-control"  value="">
+                                            <input type="file" id="paid_image" name="paid_image" class="mat-input form-control"  value="" accept="image/*">
                                         </div>
                                         '.$imagedata.'
                                         <div class="form-group pmd-textfield pmd-textfield-floating-label">

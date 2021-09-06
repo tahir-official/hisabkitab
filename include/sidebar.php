@@ -1,7 +1,7 @@
 <!-- sidebar-->
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
    <ul class="nav">
-      <li class="nav-item nav-category" style="text-align: center;">Main Menu</li>
+      <li class="nav-item nav-category" style="text-align: center;"><?=$adminData['name']?></li>
       <li class="nav-item div-mobile">
          <a class="nav-link" href="<?=MAIN_URL?>/profile.php">
          <i class="menu-icon typcn typcn-document-text"></i>

@@ -71,7 +71,7 @@ class Functions
    																<tbody>    
    																	<tr>       
    																		<td style="border-collapse:collapse;font-family:Helvetica Neue,Helvetica,Arial,Lucida Grande,sans-serif;font-size:14px;vertical-align:top;padding:0;color:#000000" valign="top" align="left">  
-   																			<img src="'.MAIN_URL.'/assets/images/jainlogo.png" style="max-width:100%;width:160px;margin:5px 0 0 0" width="140">
+   																			<img src="'.MAIN_URL.'/assets/images/jainlogo.png" style="max-width:100%;width:100px;margin:5px 0 0 0" width="140">
    																		</td>   
    																		<td style="border-collapse:collapse;font-family:Helvetica Neue,Helvetica,Arial,Lucida Grande,sans-serif;font-size:14px;vertical-align:top;padding:0;color:#000000" valign="top" align="right">
    																		</td>        
